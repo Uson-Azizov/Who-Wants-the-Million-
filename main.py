@@ -1,2 +1,5 @@
+from src.app import MillionaireGameApp
 
-ic770577
+
+if __name__ == "__main__":
+    MillionaireGameApp().run()
