@@ -174,3 +174,32 @@ class GameApp:
 
     def open_menu(self) -> None:
         raise NotImplementedError
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
