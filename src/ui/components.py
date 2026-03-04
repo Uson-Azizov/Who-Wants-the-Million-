@@ -212,9 +212,9 @@ class GlassButton(tk.Canvas):
             if self._state == "disabled":
                 self._hover_target = 0.0
                 self._pressed_inside = False
-                self.configure(cursor="arrow")
+                super().configure(cursor="arrow")
             else:
-                self.configure(cursor="hand2")
+                super().configure(cursor="hand2")
             self._draw_button()
 
         if cnf is not None or kwargs:

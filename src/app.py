@@ -2,11 +2,22 @@ from __future__ import annotations
 
 import tkinter as tk
 
-from src.config import QUESTIONS_FILES, SCREEN_HEIGHT, SCREEN_WIDTH, START_FULLSCREEN, TITLE
+from src.config import (
+    DATABASE_CONNECT_TIMEOUT,
+    DATABASE_URL,
+    PLAYER_NAME,
+    QUESTIONS_FILES,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    START_FULLSCREEN,
+    TITLE,
+)
+from src.database import DatabaseClient
 from src.models import Difficulty
 from src.repository import QuestionRepository
 from src.screens.base import Screen
 from src.screens.game import GameScreen
+from src.screens.leaderboard import LeaderboardScreen
 from src.screens.menu import MenuScreen
 from src.screens.mode_select import ModeSelectScreen
 from src.screens.settings import SettingsScreen
@@ -34,6 +45,10 @@ class MillionaireGameApp:
         self.root.minsize(980, 620)
 
         self.status_text_var = tk.StringVar(value="Главное меню")
+        self.player_name = PLAYER_NAME
+        self.database = DatabaseClient(DATABASE_URL, connect_timeout=DATABASE_CONNECT_TIMEOUT)
+        db_health = self.database.initialize()
+        self.db_status_var = tk.StringVar(value=db_health.message)
 
         repository = QuestionRepository(QUESTIONS_FILES)
         self.questions = repository.load_all()
@@ -88,6 +103,10 @@ class MillionaireGameApp:
         self.status_text_var.set("Выберите сложность")
         self._switch_screen(ModeSelectScreen(self))
 
+    def open_leaderboard(self) -> None:
+        self.status_text_var.set("Рекорды")
+        self._switch_screen(LeaderboardScreen(self))
+
     def open_settings(self) -> None:
         self.status_text_var.set("Настройки")
         self._switch_screen(SettingsScreen(self))
@@ -104,6 +123,33 @@ class MillionaireGameApp:
 
     def quit(self) -> None:
         self.root.destroy()
+
+    def check_database(self) -> None:
+        health = self.database.initialize()
+        self.db_status_var.set(health.message)
+        self.status_text_var.set(health.message if health.connected else "Ошибка подключения PostgreSQL")
+
+    def get_leaderboard(self, limit: int = 25):
+        entries, message = self.database.get_leaderboard(limit=limit)
+        self.db_status_var.set(message)
+        return entries, message
+
+    def save_game_result(self, difficulty: Difficulty, is_win: bool) -> None:
+        saved = self.database.save_game_result(
+            player_name=self.player_name,
+            difficulty=difficulty.value,
+            score=self.game_service.session.score,
+            asked_questions=self.game_service.session.asked,
+            is_win=is_win,
+        )
+
+        if saved:
+            self.db_status_var.set("Результат игры сохранен в PostgreSQL")
+            return
+
+        if self.database.enabled:
+            message = self.database.last_error or "Не удалось сохранить результат в PostgreSQL"
+            self.db_status_var.set(message)
 
     def run(self) -> None:
         self.root.mainloop()

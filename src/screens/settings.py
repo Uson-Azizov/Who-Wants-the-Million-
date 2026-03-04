@@ -46,10 +46,37 @@ class SettingsScreen(Screen):
             font=("Arial", 14),
         ).pack(pady=(0, 18))
 
+        tk.Label(
+            panel,
+            text="Статус PostgreSQL:",
+            bg=self.app.theme.panel_bg,
+            fg=self.app.theme.text_secondary,
+            font=("Arial", 13, "bold"),
+        ).pack(pady=(4, 2))
+
+        tk.Label(
+            panel,
+            textvariable=self.app.db_status_var,
+            bg=self.app.theme.panel_bg,
+            fg=self.app.theme.text_primary,
+            font=("Arial", 12),
+            wraplength=620,
+            justify="center",
+        ).pack(pady=(0, 12))
+
         GlassButton(
             panel,
             text="Переключить Fullscreen",
             command=self.app.toggle_fullscreen,
+            theme=self.app.theme,
+            font=("Arial", 14, "bold"),
+            width=28,
+        ).pack(pady=8)
+
+        GlassButton(
+            panel,
+            text="Проверить PostgreSQL",
+            command=self.app.check_database,
             theme=self.app.theme,
             font=("Arial", 14, "bold"),
             width=28,
@@ -70,9 +97,13 @@ class SettingsScreen(Screen):
 
 class SettingsApp:
     theme: object
+    db_status_var: tk.StringVar
 
     def open_menu(self) -> None:
         raise NotImplementedError
 
     def toggle_fullscreen(self) -> None:
+        raise NotImplementedError
+
+    def check_database(self) -> None:
         raise NotImplementedError

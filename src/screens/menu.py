@@ -71,6 +71,7 @@ class MenuScreen(Screen):
 
         for text, command in [
             ("Играть", self.app.open_mode_select),
+            ("Рекорды", self.app.open_leaderboard),
             ("Настройки", self.app.open_settings),
             ("Выход", self.app.quit),
         ]:
@@ -122,6 +123,9 @@ class MenuApp:
         raise NotImplementedError
 
     def open_settings(self) -> None:
+        raise NotImplementedError
+
+    def open_leaderboard(self) -> None:
         raise NotImplementedError
 
     def quit(self) -> None:

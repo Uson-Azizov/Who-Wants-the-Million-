@@ -39,6 +39,7 @@ class GameScreen(Screen):
         self.current_question: Question | None = None
         self.answer_buttons: list[GlassButton] = []
         self.pending_next_question = False
+        self.result_saved = False
 
         self._build_content()
         self.background.start()
@@ -115,6 +116,9 @@ class GameScreen(Screen):
         if self.current_question is None:
             self.question_label.configure(text="В этой сложности больше нет вопросов.")
             self.feedback_label.configure(text="Вернись в меню и выбери режим снова.")
+            if self.app.game_service.session.asked > 0 and not self.result_saved:
+                self.app.save_game_result(self.difficulty, True)
+                self.result_saved = True
             return
 
         self.question_label.configure(text=self.current_question.text)
@@ -147,6 +151,9 @@ class GameScreen(Screen):
             return
 
         self.feedback_label.configure(text="Неправильно. Возврат в главное меню...")
+        if not self.result_saved:
+            self.app.save_game_result(self.difficulty, False)
+            self.result_saved = True
         self.container.after(900, self.app.open_menu)
 
     def on_resize(self, width: int, height: int) -> None:
@@ -175,6 +182,8 @@ class GameApp:
     def open_menu(self) -> None:
         raise NotImplementedError
 
+    def save_game_result(self, difficulty: Difficulty, is_win: bool) -> None:
+        raise NotImplementedError
 
 
 
