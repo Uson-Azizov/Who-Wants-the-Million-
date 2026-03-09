@@ -15,12 +15,23 @@ class GlassButton(tk.Canvas):
         theme: Theme,
         font: tuple[str, int, str] = ("Arial", 16, "bold"),
         width: int = 28,
+        height: int = 52,
+        radius: int = 13,
+        bg_color: str | None = None,
+        hover_color: str | None = None,
+        border_color: str | None = None,
+        text_color: str | None = None,
+        canvas_bg: str | None = None,
     ) -> None:
         self.theme = theme
         self.command = command
         self.text = text
         self.font = font
         self._state = "normal"
+        self._base_bg = bg_color or theme.button_bg
+        self._hover_bg = hover_color or theme.button_hover
+        self._border_color = border_color or theme.button_border
+        self._text_color = text_color or theme.button_text
 
         self._hover_target = 0.0
         self._hover_value = 0.0
@@ -28,8 +39,8 @@ class GlassButton(tk.Canvas):
         self._pressed_inside = False
 
         self._min_width = max(180, width * 12)
-        self._height = 52
-        self._radius = 13
+        self._height = max(40, int(height))
+        self._radius = max(8, int(radius))
         self._job_id: str | None = None
 
         super().__init__(
@@ -39,7 +50,7 @@ class GlassButton(tk.Canvas):
             highlightthickness=0,
             bd=0,
             relief="flat",
-            bg=master.cget("bg"),
+            bg=canvas_bg or master.cget("bg"),
             cursor="hand2",
         )
 
@@ -161,27 +172,14 @@ class GlassButton(tk.Canvas):
 
         if self._state == "disabled":
             fill = self.theme.button_disabled_bg
-            border = self._blend(self.theme.button_disabled_bg, self.theme.button_border, 0.25)
+            border = self._blend(self.theme.button_disabled_bg, self._border_color, 0.25)
             text_color = self.theme.button_disabled_text
         else:
-            fill = self._blend(self.theme.button_bg, self.theme.button_hover, self._hover_value)
-            border = self._blend(self.theme.button_border, self.theme.text_primary, self._hover_value * 0.35)
-            text_color = self.theme.button_text
+            fill = self._blend(self._base_bg, self._hover_bg, self._hover_value)
+            border = self._blend(self._border_color, self.theme.text_primary, self._hover_value * 0.35)
+            text_color = self._text_color
 
-        shadow_color = self._blend("#0a1525", self.theme.button_bg, 0.25)
-        self._create_rounded_rect(x1 + 1, y1 + 3, x2 + 1, y2 + 3, self._radius, fill=shadow_color, outline="")
         self._create_rounded_rect(x1, y1, x2, y2, self._radius, fill=fill, outline=border, width=2)
-
-        shine = self._blend(self.theme.text_primary, fill, 0.65)
-        self._create_rounded_rect(
-            x1 + 10,
-            y1 + 7,
-            x2 - 10,
-            y1 + 16,
-            6,
-            fill=shine,
-            outline="",
-        )
 
         center_x = width // 2
         center_y = (y1 + y2) // 2

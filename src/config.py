@@ -15,14 +15,39 @@ BACKGROUND_IMAGE_PATH = ANIMATIONS_DIR / "mindset_menu_bg.jpg"
 
 
 def _resolve_menu_background_path() -> Path:
-    candidates = sorted(
+    if not IMAGES_DIR.exists():
+        return BACKGROUND_IMAGE_PATH
+
+    candidates = [
         path
         for path in IMAGES_DIR.iterdir()
         if path.is_file() and path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
-    ) if IMAGES_DIR.exists() else []
-    if candidates:
-        return candidates[0]
-    return BACKGROUND_IMAGE_PATH
+    ]
+    if not candidates:
+        return BACKGROUND_IMAGE_PATH
+
+    preferred_names = {
+        "background",
+        "menu_background",
+        "mindset_background",
+        "bg",
+    }
+    for candidate in candidates:
+        if candidate.stem.lower() in preferred_names:
+            return candidate
+
+    try:
+        from PIL import Image
+
+        def image_area(path: Path) -> int:
+            with Image.open(path) as image:
+                w, h = image.size
+                return int(w * h)
+
+        return max(candidates, key=image_area)
+    except Exception:
+        # Fallback without Pillow: choose the largest file size.
+        return max(candidates, key=lambda p: p.stat().st_size)
 
 
 MENU_BACKGROUND_IMAGE_PATH = _resolve_menu_background_path()

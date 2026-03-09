@@ -122,7 +122,12 @@ class LeaderboardScreen(Screen):
             foreground=[("selected", "#ffffff")],
         )
     def _difficulty_label(self, value: str) -> str:
-        mapping = {"easy": "Легкая", "medium": "Нормальная", "hard": "Сложная"}
+        mapping = {
+            "easy": "Легкая",
+            "medium": "Нормальная",
+            "hard": "Сложная",
+            "mixed": "Смешанная",
+        }
         return mapping.get(value.lower(), value)
 
     def load_leaderboard(self) -> None:

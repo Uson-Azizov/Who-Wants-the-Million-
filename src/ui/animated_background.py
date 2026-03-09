@@ -6,9 +6,10 @@ from pathlib import Path
 import tkinter as tk
 
 try:
-    from PIL import Image, ImageTk
+    from PIL import Image, ImageEnhance, ImageTk
 except Exception:  # pragma: no cover - optional dependency
     Image = None
+    ImageEnhance = None
     ImageTk = None
 
 
@@ -41,6 +42,7 @@ class AnimatedBackground:
         self.bg_id: int | None = None
         self.overlay_id: int | None = None
         self.scan_id: int | None = None
+        self._using_pil_image = False
 
         self.canvas.bind("<Configure>", self._on_configure)
 
@@ -82,17 +84,8 @@ class AnimatedBackground:
         else:
             self._draw_image_background(0, 0)
 
-        overlay_color = f"#000000"
-        self.overlay_id = self.canvas.create_rectangle(
-            0,
-            0,
-            self.width,
-            self.height,
-            fill=overlay_color,
-            stipple="gray50" if self.darken_alpha >= 100 else "gray25",
-            outline="",
-            tags="bg",
-        )
+        if self.source_image is None:
+            self._draw_darken_overlay()
 
         if self.show_scanline:
             self.scan_id = self.canvas.create_rectangle(
@@ -102,6 +95,25 @@ class AnimatedBackground:
                 -10,
                 fill="#9ec5ff",
                 stipple="gray25",
+                outline="",
+                tags="bg",
+            )
+
+    def _draw_darken_overlay(self) -> None:
+        if self.darken_alpha <= 0:
+            return
+
+        # Tkinter Canvas has no true per-item alpha for fill, so layer multiple stippled overlays.
+        layers = max(1, min(6, self.darken_alpha // 35))
+        for index in range(layers):
+            stipple = "gray50" if index % 2 == 0 else "gray25"
+            self.overlay_id = self.canvas.create_rectangle(
+                0,
+                0,
+                self.width,
+                self.height,
+                fill="#000000",
+                stipple=stipple,
                 outline="",
                 tags="bg",
             )
@@ -121,6 +133,7 @@ class AnimatedBackground:
             return
 
         if Image is not None and hasattr(self.source_image, "size"):
+            self._using_pil_image = True
             target_w = self.width + self.max_drift_x * 2
             target_h = self.height + self.max_drift_y * 2
             src_w, src_h = self.source_image.size
@@ -133,8 +146,13 @@ class AnimatedBackground:
             crop_x = (resized.size[0] - target_w) // 2
             crop_y = (resized.size[1] - target_h) // 2
             cropped = resized.crop((crop_x, crop_y, crop_x + target_w, crop_y + target_h))
+            if self.darken_alpha > 0 and ImageEnhance is not None:
+                # Darken directly in image pipeline (reliable on macOS Tk where canvas stipple may render solid black).
+                factor = max(0.25, 1.0 - (self.darken_alpha / 255.0) * 0.65)
+                cropped = ImageEnhance.Brightness(cropped).enhance(factor)
             self.tk_image = ImageTk.PhotoImage(cropped)
         else:
+            self._using_pil_image = False
             self.tk_image = self.source_image
 
         self.bg_id = self.canvas.create_image(

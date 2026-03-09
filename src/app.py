@@ -19,7 +19,6 @@ from src.screens.base import Screen
 from src.screens.game import GameScreen
 from src.screens.leaderboard import LeaderboardScreen
 from src.screens.menu import MenuScreen
-from src.screens.mode_select import ModeSelectScreen
 from src.screens.settings import SettingsScreen
 from src.services import GameService
 from src.ui.theme import Theme
@@ -99,10 +98,6 @@ class MillionaireGameApp:
         self.status_text_var.set("Главное меню")
         self._switch_screen(MenuScreen(self))
 
-    def open_mode_select(self) -> None:
-        self.status_text_var.set("Выберите сложность")
-        self._switch_screen(ModeSelectScreen(self))
-
     def open_leaderboard(self) -> None:
         self.status_text_var.set("Рекорды")
         self._switch_screen(LeaderboardScreen(self))
@@ -111,15 +106,16 @@ class MillionaireGameApp:
         self.status_text_var.set("Настройки")
         self._switch_screen(SettingsScreen(self))
 
-    def start_game(self, difficulty: Difficulty) -> None:
-        if not self.questions[difficulty]:
-            self.status_text_var.set(f"В {difficulty.value}.json нет вопросов")
-            self.open_mode_select()
+    def start_game(self, difficulty: Difficulty | None = None) -> None:
+        missing = [diff.value for diff in Difficulty if not self.questions[diff]]
+        if missing:
+            self.status_text_var.set(f"Нет вопросов: {', '.join(missing)}")
+            self.open_menu()
             return
 
         self.game_service.reset()
-        self.status_text_var.set(f"Игра запущена: {difficulty.value}")
-        self._switch_screen(GameScreen(self, difficulty))
+        self.status_text_var.set("Игра запущена")
+        self._switch_screen(GameScreen(self))
 
     def quit(self) -> None:
         self.root.destroy()
@@ -134,10 +130,11 @@ class MillionaireGameApp:
         self.db_status_var.set(message)
         return entries, message
 
-    def save_game_result(self, difficulty: Difficulty, is_win: bool) -> None:
+    def save_game_result(self, difficulty: Difficulty | str, is_win: bool) -> None:
+        difficulty_value = difficulty.value if isinstance(difficulty, Difficulty) else str(difficulty)
         saved = self.database.save_game_result(
             player_name=self.player_name,
-            difficulty=difficulty.value,
+            difficulty=difficulty_value,
             score=self.game_service.session.score,
             asked_questions=self.game_service.session.asked,
             is_win=is_win,
