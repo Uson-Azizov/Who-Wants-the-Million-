@@ -40,6 +40,8 @@ class AnimatedBackground:
         self.tk_image: ImageTk.PhotoImage | tk.PhotoImage | None = None
 
         self.bg_id: int | None = None
+        self.bg_base_x = 0
+        self.bg_base_y = 0
         self.overlay_id: int | None = None
         self.scan_id: int | None = None
         self._using_pil_image = False
@@ -56,7 +58,14 @@ class AnimatedBackground:
 
         if Image is not None:
             try:
-                return Image.open(self.image_path).convert("RGB")
+                image = Image.open(self.image_path)
+                # Avoid black artifacts from transparent PNG areas by flattening alpha
+                # onto the app's dark base color before converting to RGB.
+                if image.mode in ("RGBA", "LA") or ("transparency" in image.info):
+                    image = image.convert("RGBA")
+                    base = Image.new("RGBA", image.size, "#0b1220")
+                    image = Image.alpha_composite(base, image)
+                return image.convert("RGB")
             except Exception:
                 return None
 
@@ -136,6 +145,9 @@ class AnimatedBackground:
         if self.source_image is None:
             return
 
+        # Always paint a full-canvas base first so uncovered pixels never look black.
+        self.canvas.create_rectangle(0, 0, self.width, self.height, fill="#0b1220", outline="", tags="bg")
+
         if Image is not None and hasattr(self.source_image, "size"):
             self._using_pil_image = True
             bleed = self._cover_bleed(self.width, self.height)
@@ -145,7 +157,7 @@ class AnimatedBackground:
             scale = max(target_w / src_w, target_h / src_h)
             resample = Image.Resampling.LANCZOS if hasattr(Image, "Resampling") else Image.LANCZOS
             resized = self.source_image.resize(
-                (max(1, int(src_w * scale)), max(1, int(src_h * scale))),
+                (max(1, math.ceil(src_w * scale)), max(1, math.ceil(src_h * scale))),
                 resample,
             )
             crop_x = (resized.size[0] - target_w) // 2
@@ -158,11 +170,37 @@ class AnimatedBackground:
             self.tk_image = ImageTk.PhotoImage(cropped)
         else:
             self._using_pil_image = False
-            self.tk_image = self.source_image
+            src = self.source_image
+            src_w = max(1, int(src.width()))
+            src_h = max(1, int(src.height()))
+            bleed = self._cover_bleed(self.width, self.height)
+            target_w = self.width + bleed * 2 + self.max_drift_x * 2
+            target_h = self.height + bleed * 2 + self.max_drift_y * 2
 
+            scale = max(target_w / src_w, target_h / src_h)
+            if scale >= 1:
+                zoom_n = max(1, math.ceil(scale))
+                scaled = src.zoom(zoom_n, zoom_n)
+            else:
+                sub_n = max(1, math.ceil(1 / scale))
+                scaled = src.subsample(sub_n, sub_n)
+
+            scaled_w = max(1, int(scaled.width()))
+            scaled_h = max(1, int(scaled.height()))
+
+            self.tk_image = scaled
+            x = -((scaled_w - target_w) // 2) - bleed - self.max_drift_x + dx
+            y = -((scaled_h - target_h) // 2) - bleed - self.max_drift_y + dy
+            self.bg_base_x = x
+            self.bg_base_y = y
+            self.bg_id = self.canvas.create_image(self.bg_base_x, self.bg_base_y, image=self.tk_image, anchor="nw", tags="bg")
+            return
+
+        self.bg_base_x = -self._cover_bleed(self.width, self.height) - self.max_drift_x
+        self.bg_base_y = -self._cover_bleed(self.width, self.height) - self.max_drift_y
         self.bg_id = self.canvas.create_image(
-            -self._cover_bleed(self.width, self.height) - self.max_drift_x + dx,
-            -self._cover_bleed(self.width, self.height) - self.max_drift_y + dy,
+            self.bg_base_x + dx,
+            self.bg_base_y + dy,
             image=self.tk_image,
             anchor="nw",
             tags="bg",
@@ -175,13 +213,12 @@ class AnimatedBackground:
         self.time += 0.05
 
         if self.bg_id is not None:
-            bleed = self._cover_bleed(self.width, self.height)
             dx = int(self.max_drift_x * math.sin(self.time * 0.9))
             dy = int(self.max_drift_y * math.cos(self.time * 1.1))
             self.canvas.coords(
                 self.bg_id,
-                -bleed - self.max_drift_x + dx,
-                -bleed - self.max_drift_y + dy,
+                self.bg_base_x + dx,
+                self.bg_base_y + dy,
             )
 
         if self.scan_id is not None:

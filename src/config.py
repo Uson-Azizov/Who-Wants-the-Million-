@@ -15,6 +15,10 @@ BACKGROUND_IMAGE_PATH = ANIMATIONS_DIR / "mindset_menu_bg.jpg"
 
 
 def _resolve_menu_background_path() -> Path:
+    direct_background = IMAGES_DIR / "background.png"
+    if direct_background.exists():
+        return direct_background
+
     if not IMAGES_DIR.exists():
         return BACKGROUND_IMAGE_PATH
 
