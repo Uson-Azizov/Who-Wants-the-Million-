@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 QUESTIONS_DIR = BASE_DIR / "questions"
 ANIMATIONS_DIR = BASE_DIR / "animations"
 IMAGES_DIR = BASE_DIR / "images"
+EXPORTS_DIR = BASE_DIR / "exports"
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -51,6 +52,8 @@ def _resolve_menu_background_path() -> Path:
 
 
 MENU_BACKGROUND_IMAGE_PATH = _resolve_menu_background_path()
+MENU_LAYOUT_IMAGE_PATH = IMAGES_DIR / "menu_layout.png"
+MENU_LOGO_IMAGE_PATH = IMAGES_DIR / "menu_logo.png"
 
 QUESTIONS_FILES = {
     "easy": QUESTIONS_DIR / "easy.json",
@@ -77,6 +80,10 @@ def _load_dotenv(path: Path) -> None:
 
 _load_dotenv(BASE_DIR / ".env")
 
+DATABASE_BACKEND = os.getenv("DATABASE_BACKEND", "sqlite").strip().lower() or "sqlite"
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 DATABASE_CONNECT_TIMEOUT = int(os.getenv("DATABASE_CONNECT_TIMEOUT", "8"))
+SQLITE_DATABASE_PATH = Path(os.getenv("SQLITE_DATABASE_PATH", str(BASE_DIR / "students.db")))
+ADMIN_DEFAULT_LOGIN = os.getenv("ADMIN_DEFAULT_LOGIN", "admin")
+ADMIN_DEFAULT_CODE = os.getenv("ADMIN_DEFAULT_CODE", "mindset_admin_2026")
 PLAYER_NAME = os.getenv("PLAYER_NAME", "Player")

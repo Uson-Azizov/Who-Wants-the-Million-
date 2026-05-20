@@ -1,0 +1,1023 @@
+{
+  "backend": "SQLite",
+  "questions": [
+    {
+      "difficulty": "easy",
+      "question_text": "Что в сигаретах вызывает зависимость?",
+      "option_a": "Смола",
+      "option_b": "Углекислый газ",
+      "option_c": "Никотин",
+      "option_d": "Табаковый дым",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Сколько букв в немецком алфавите?",
+      "option_a": "24",
+      "option_b": "26",
+      "option_c": "30",
+      "option_d": "26 (+ ä, ö, ü, ß отдельно)",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "В каком году распался СССР?",
+      "option_a": "1989",
+      "option_b": "1990",
+      "option_c": "1991",
+      "option_d": "1993",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Кто автор произведения \"Война и мир\"?",
+      "option_a": "Достоевский",
+      "option_b": "Тургенев",
+      "option_c": "Толстой",
+      "option_d": "Чехов",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Людей какой национальности больше всего в мире?",
+      "option_a": "Индийцы",
+      "option_b": "Американцы",
+      "option_c": "Китайцы (ханьцы)",
+      "option_d": "Русские",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какого великого завоевателя называли коротким?",
+      "option_a": "Александр Македонский",
+      "option_b": "Наполеон Бонапарт",
+      "option_c": "Чингисхан",
+      "option_d": "Юлий Цезарь",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какой из городов не является европейским?",
+      "option_a": "Париж",
+      "option_b": "Рим",
+      "option_c": "Берлин",
+      "option_d": "Токио",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какой язык программирования считается самым легким?",
+      "option_a": "C++",
+      "option_b": "Java",
+      "option_c": "Python",
+      "option_d": "Assembly",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Столица Украины?",
+      "option_a": "Львов",
+      "option_b": "Одесса",
+      "option_c": "Харьков",
+      "option_d": "Киев",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "На каком континенте впервые узнали о картошке?",
+      "option_a": "Европа",
+      "option_b": "Азия",
+      "option_c": "Африка",
+      "option_d": "Южная Америка",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Химическая формула воды?",
+      "option_a": "CO₂",
+      "option_b": "H₂O",
+      "option_c": "O₂",
+      "option_d": "H₂O₂",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какой раздел математики изучает свойства чисел?",
+      "option_a": "Геометрия",
+      "option_b": "Алгебра",
+      "option_c": "Теория чисел",
+      "option_d": "Статистика",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какая из них не является дистрибутивом Linux?",
+      "option_a": "Ubuntu",
+      "option_b": "Fedora",
+      "option_c": "Debian",
+      "option_d": "Windows",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Формула свободного падения (путь)?",
+      "option_a": "s = vt",
+      "option_b": "s = at",
+      "option_c": "s = gt²",
+      "option_d": "s = (gt²)/2",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какой раздел IT занимается защитой данных?",
+      "option_a": "Веб-разработка",
+      "option_b": "Геймдев",
+      "option_c": "Кибербезопасность",
+      "option_d": "Дизайн",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какие виды спорта относятся к легкой атлетике?",
+      "option_a": "Бокс",
+      "option_b": "Плавание",
+      "option_c": "Бег, прыжки, метание",
+      "option_d": "Футбол",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Чем не могут являться государственные символы стран?",
+      "option_a": "Флаг",
+      "option_b": "Герб",
+      "option_c": "Гимн",
+      "option_d": "Валюта",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Что будет если смешать синюю и красную краску?",
+      "option_a": "Зеленый",
+      "option_b": "Желтый",
+      "option_c": "Фиолетовый",
+      "option_d": "Коричневый",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "В каком году закончилась ВОВ?",
+      "option_a": "1943",
+      "option_b": "1944",
+      "option_c": "1945",
+      "option_d": "1946",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "В чем измеряется скорость в системе СИ?",
+      "option_a": "км/ч",
+      "option_b": "м/с",
+      "option_c": "м",
+      "option_d": "с",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Длина экватора Земли?",
+      "option_a": "~10 000 км",
+      "option_b": "~20 000 км",
+      "option_c": "~40 075 км",
+      "option_d": "~50 000 км",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Сколько законов Ньютона существует?",
+      "option_a": "2",
+      "option_b": "3",
+      "option_c": "4",
+      "option_d": "5",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Валюта во Франции?",
+      "option_a": "Франк",
+      "option_b": "Доллар",
+      "option_c": "Евро",
+      "option_d": "Фунт",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Сколько стран в СНГ?",
+      "option_a": "9",
+      "option_b": "10",
+      "option_c": "11",
+      "option_d": "12",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "В каком году началась Первая мировая война?",
+      "option_a": "1912",
+      "option_b": "1913",
+      "option_c": "1914",
+      "option_d": "1915",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Самый популярный спорт в мире?",
+      "option_a": "Баскетбол",
+      "option_b": "Крикет",
+      "option_c": "Футбол",
+      "option_d": "Теннис",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Сколько у людей хромосом?",
+      "option_a": "44",
+      "option_b": "45",
+      "option_c": "46",
+      "option_d": "48",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Сумма углов треугольника?",
+      "option_a": "90°",
+      "option_b": "180°",
+      "option_c": "270°",
+      "option_d": "360°",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Какая компания владеет напитком Sprite?",
+      "option_a": "PepsiCo",
+      "option_b": "Nestlé",
+      "option_c": "Coca-Cola Company",
+      "option_d": "Red Bull",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Благодаря чему функционирует огнестрельное оружие?",
+      "option_a": "Давлению воздуха",
+      "option_b": "Электричеству",
+      "option_c": "Силе трения",
+      "option_d": "Энергии пороховых газов",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Когда основали ООН?",
+      "option_a": "1941",
+      "option_b": "1943",
+      "option_c": "1945",
+      "option_d": "1947",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Кем был Ленин?",
+      "option_a": "Писатель",
+      "option_b": "Ученый",
+      "option_c": "Российский революционер и политик",
+      "option_d": "Генерал",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Кто открыл Америку?",
+      "option_a": "Магеллан",
+      "option_b": "Колумб",
+      "option_c": "Васко да Гама",
+      "option_d": "Кук",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "easy",
+      "question_text": "Сколько планет в Солнечной системе?",
+      "option_a": "7",
+      "option_b": "8",
+      "option_c": "9",
+      "option_d": "10",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой материк движется быстрее всех?",
+      "option_a": "Африка",
+      "option_b": "Евразия",
+      "option_c": "Австралия",
+      "option_d": "Антарктида",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какое понятие ввёл Макс Вебер?",
+      "option_a": "Социальный дарвинизм",
+      "option_b": "Харизма",
+      "option_c": "Диалектика",
+      "option_d": "Экзистенция",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой код использовался для шифрования сообщений в нацистской Германии?",
+      "option_a": "Цезарь",
+      "option_b": "Энигма",
+      "option_c": "Лоренц",
+      "option_d": "Виженер",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой орган НЕ относится к эндокринной системе?",
+      "option_a": "Гипофиз",
+      "option_b": "Надпочечники",
+      "option_c": "Поджелудочная",
+      "option_d": "Желчный пузырь",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какая звезда является ближайшей к Солнцу?",
+      "option_a": "Сириус",
+      "option_b": "Альфа Центавра A",
+      "option_c": "Проксима Центавра",
+      "option_d": "Звезда Барнарда",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой труд НЕ принадлежит Никколо Макиавелли?",
+      "option_a": "Государь",
+      "option_b": "Рассуждения о первой декаде Тита Ливия",
+      "option_c": "Утопия",
+      "option_d": "История Флоренции",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Что из перечисленного является квазичастицей?",
+      "option_a": "Фотон",
+      "option_b": "Магнон",
+      "option_c": "Электрон",
+      "option_d": "Протон",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какая страна имеет наибольшее количество часовых поясов?",
+      "option_a": "США",
+      "option_b": "Россия",
+      "option_c": "Франция",
+      "option_d": "Китай",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Что означает термин «анамнез»?",
+      "option_a": "Диагноз",
+      "option_b": "История болезни",
+      "option_c": "Симптом",
+      "option_d": "Лечение",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой договор юридически завершил Первую мировую войну для Германии?",
+      "option_a": "Сен-Жерменский",
+      "option_b": "Версальский",
+      "option_c": "Трианонский",
+      "option_d": "Нёйиский",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Кто был реальным прототипом графа Дракулы?",
+      "option_a": "Влад Цепеш",
+      "option_b": "Маттиас Корвин",
+      "option_c": "Стефан Великий",
+      "option_d": "Ян Хуняди",
+      "correct_index": 0,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какая часть мозга отвечает за проприоцепцию?",
+      "option_a": "Гиппокамп",
+      "option_b": "Мозжечок",
+      "option_c": "Таламус",
+      "option_d": "Амигдала",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой из этих языков не имеет падежей?",
+      "option_a": "Финский",
+      "option_b": "Латынь",
+      "option_c": "Английский",
+      "option_d": "Эстонский",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какое государство НЕ входит в G20?",
+      "option_a": "Аргентина",
+      "option_b": "Испания",
+      "option_c": "Индонезия",
+      "option_d": "Турция",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой математический символ впервые ввёл Лейбниц?",
+      "option_a": "√",
+      "option_b": "∫",
+      "option_c": "π",
+      "option_d": "∞",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Кто ввёл термин «геноцид»?",
+      "option_a": "Рафаэль Лемкин",
+      "option_b": "Ханна Арендт",
+      "option_c": "Карл Ясперс",
+      "option_d": "Эли Визель",
+      "correct_index": 0,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой газ преобладает в атмосфере Марса?",
+      "option_a": "Азот",
+      "option_b": "Кислород",
+      "option_c": "Углекислый газ",
+      "option_d": "Метан",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой город называют «городом семи холмов», кроме Рима?",
+      "option_a": "Париж",
+      "option_b": "Москва",
+      "option_c": "Константинополь",
+      "option_d": "Афины",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Что измеряет шкала Апгар?",
+      "option_a": "Интеллект",
+      "option_b": "Пульс",
+      "option_c": "Состояние новорождённого",
+      "option_d": "Давление",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какая из этих дат НЕ связана с холодной войной?",
+      "option_a": "1947",
+      "option_b": "1956",
+      "option_c": "1962",
+      "option_d": "1979",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой материал использовался как замедлитель в первых ядерных реакторах?",
+      "option_a": "Графит",
+      "option_b": "Вода",
+      "option_c": "Бериллий",
+      "option_d": "Кадмий",
+      "correct_index": 0,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Что означает латинское выражение «sub rosa»?",
+      "option_a": "Под угрозой",
+      "option_b": "В тайне",
+      "option_c": "По закону",
+      "option_d": "Свыше",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какое море не имеет береговой линии?",
+      "option_a": "Саргассово",
+      "option_b": "Чёрное",
+      "option_c": "Каспийское",
+      "option_d": "Красное",
+      "correct_index": 0,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой из этих писателей НЕ получал Нобелевскую премию?",
+      "option_a": "Альбер Камю",
+      "option_b": "Борис Пастернак",
+      "option_c": "Джеймс Джойс",
+      "option_d": "Эрнест Хемингуэй",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Что НЕ является постулатом специальной теории относительности?",
+      "option_a": "Постоянство скорости света",
+      "option_b": "Относительность времени",
+      "option_c": "Эквивалентность массы и энергии",
+      "option_d": "Отсутствие абсолютной системы отсчёта",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какое государство первым признало СССР?",
+      "option_a": "Германия",
+      "option_b": "Турция",
+      "option_c": "Афганистан",
+      "option_d": "Великобритания",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой орган человека вырабатывает эритропоэтин?",
+      "option_a": "Печень",
+      "option_b": "Почки",
+      "option_c": "Селезёнка",
+      "option_d": "Костный мозг",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какая война длилась дольше всего официально?",
+      "option_a": "Столетняя",
+      "option_b": "Пуннические войны",
+      "option_c": "Тридцатилетняя",
+      "option_d": "Война с Нидерландами (Силли)",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой философ ввёл понятие «ноумен»?",
+      "option_a": "Платон",
+      "option_b": "Аристотель",
+      "option_c": "Иммануил Кант",
+      "option_d": "Георг Гегель",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой элемент имеет наибольшее атомное число среди стабильных?",
+      "option_a": "Свинец",
+      "option_b": "Висмут",
+      "option_c": "Уран",
+      "option_d": "Торий",
+      "correct_index": 0,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой город никогда не был столицей Римской империи?",
+      "option_a": "Равенна",
+      "option_b": "Милан",
+      "option_c": "Никомедия",
+      "option_d": "Афины",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой принцип лежит в основе обнаружения гравитационных волн?",
+      "option_a": "Интерференция света",
+      "option_b": "Искривление пространства-времени",
+      "option_c": "Квантовая запутанность",
+      "option_d": "Доплеровский эффект",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "hard",
+      "question_text": "Какой из этих языков НЕ относится к индоевропейской языковой семье?",
+      "option_a": "Армянский",
+      "option_b": "Албанский",
+      "option_c": "Венгерский",
+      "option_d": "Персидский",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Сколько стран входит в ООН?",
+      "option_a": "190",
+      "option_b": "192",
+      "option_c": "193",
+      "option_d": "195",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Столица Камбоджи?",
+      "option_a": "Бангкок",
+      "option_b": "Пномпень",
+      "option_c": "Ханой",
+      "option_d": "Вьентьян",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Родина пороха?",
+      "option_a": "Индия",
+      "option_b": "Китай",
+      "option_c": "Египет",
+      "option_d": "Греция",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Первый президент США?",
+      "option_a": "Авраам Линкольн",
+      "option_b": "Томас Джефферсон",
+      "option_c": "Джордж Вашингтон",
+      "option_d": "Джон Адамс",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Кому принадлежит фраза «То, что не убивает нас, делает нас сильнее»?",
+      "option_a": "Шекспир",
+      "option_b": "Дарвин",
+      "option_c": "Ницше",
+      "option_d": "Фрейд",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Сколько длилась Столетняя война?",
+      "option_a": "100 лет",
+      "option_b": "87 лет",
+      "option_c": "116 лет",
+      "option_d": "120 лет",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Кто открыл теорию относительности времени?",
+      "option_a": "Ньютон",
+      "option_b": "Галилей",
+      "option_c": "Эйнштейн",
+      "option_d": "Максвелл",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Длина Бурдж-Халифа?",
+      "option_a": "728 м",
+      "option_b": "800 м",
+      "option_c": "828 м",
+      "option_d": "900 м",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Благодаря чему растения питаются энергией солнца?",
+      "option_a": "Дыхание",
+      "option_b": "Испарение",
+      "option_c": "Фотосинтез",
+      "option_d": "Опыление",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Формула поваренной соли?",
+      "option_a": "HCl",
+      "option_b": "NaCl",
+      "option_c": "CaCO3",
+      "option_d": "NaOH",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Первый президент России?",
+      "option_a": "Горбачёв",
+      "option_b": "Путин",
+      "option_c": "Медведев",
+      "option_d": "Ельцин",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "В какой стране больше всего самоубийств на душу населения?",
+      "option_a": "Индия",
+      "option_b": "США",
+      "option_c": "Литва",
+      "option_d": "Япония",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "За что в Python отвечает функция .pop()?",
+      "option_a": "Добавляет элемент",
+      "option_b": "Сортирует список",
+      "option_c": "Удаляет и возвращает элемент",
+      "option_d": "Копирует список",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Кто написал картину «Звёздная ночь»?",
+      "option_a": "Моне",
+      "option_b": "Пикассо",
+      "option_c": "Ван Гог",
+      "option_d": "Дали",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Что означает слово «реноме»?",
+      "option_a": "Тайна",
+      "option_b": "Репутация",
+      "option_c": "Надежда",
+      "option_d": "Риск",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какой инструмент является основным в симфоническом оркестре?",
+      "option_a": "Саксофон",
+      "option_b": "Флейта",
+      "option_c": "Ударные",
+      "option_d": "Скрипка",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какая страна НЕ имеет выхода к морю?",
+      "option_a": "Португалия",
+      "option_b": "Австрия",
+      "option_c": "Греция",
+      "option_d": "Италия",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какой город называют «Северной столицей» России?",
+      "option_a": "Москва",
+      "option_b": "Новосибирск",
+      "option_c": "Санкт-Петербург",
+      "option_d": "Казань",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Кто был первым космонавтом в истории человечества?",
+      "option_a": "Армстронг",
+      "option_b": "Гагарин",
+      "option_c": "Титов",
+      "option_d": "Леонов",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Как называется наука о грибах?",
+      "option_a": "Ботаника",
+      "option_b": "Микология",
+      "option_c": "Зоология",
+      "option_d": "Экология",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какое море является самым солёным?",
+      "option_a": "Красное",
+      "option_b": "Средиземное",
+      "option_c": "Мёртвое",
+      "option_d": "Чёрное",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "В каком виде спорта разыгрывается Кубок Дэвиса?",
+      "option_a": "Футбол",
+      "option_b": "Хоккей",
+      "option_c": "Теннис",
+      "option_d": "Баскетбол",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Когда появилась первая ядерная бомба?",
+      "option_a": "1939",
+      "option_b": "1943",
+      "option_c": "1945",
+      "option_d": "1947",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Самая известная картина в мире?",
+      "option_a": "Звёздная ночь",
+      "option_b": "Тайная вечеря",
+      "option_c": "Мона Лиза",
+      "option_d": "Крик",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Кто написал произведение «Идиот»?",
+      "option_a": "Толстой",
+      "option_b": "Тургенев",
+      "option_c": "Чехов",
+      "option_d": "Достоевский",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какой металл является основным компонентом бронзы?",
+      "option_a": "Железо",
+      "option_b": "Алюминий",
+      "option_c": "Медь",
+      "option_d": "Олово",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какие семь смертных грехов есть в Библии?",
+      "option_a": "Вера, надежда, любовь",
+      "option_b": "Гнев, гордыня, зависть, похоть, чревоугодие, алчность, уныние",
+      "option_c": "Страх, боль, радость",
+      "option_d": "Лень, сон, голод",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какой термин относится к экономике?",
+      "option_a": "Импульс",
+      "option_b": "Инфляция",
+      "option_c": "Катализатор",
+      "option_d": "Орбита",
+      "correct_index": 1,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Как называется устройство для измерения атмосферного давления?",
+      "option_a": "Термометр",
+      "option_b": "Манометр",
+      "option_c": "Барометр",
+      "option_d": "Гигрометр",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Как называется государственный гимн Франции?",
+      "option_a": "Марсельеза",
+      "option_b": "Интернационал",
+      "option_c": "Реквием",
+      "option_d": "Ода радости",
+      "correct_index": 0,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какой язык является официальным в Бразилии?",
+      "option_a": "Испанский",
+      "option_b": "Английский",
+      "option_c": "Французский",
+      "option_d": "Португальский",
+      "correct_index": 3,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Какой материк самый маленький по площади?",
+      "option_a": "Европа",
+      "option_b": "Антарктида",
+      "option_c": "Австралия",
+      "option_d": "Южная Америка",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    },
+    {
+      "difficulty": "medium",
+      "question_text": "Как называется процесс превращения воды в пар?",
+      "option_a": "Конденсация",
+      "option_b": "Кристаллизация",
+      "option_c": "Испарение",
+      "option_d": "Сублимация",
+      "correct_index": 2,
+      "imported_at": "2026-05-19 07:51:06"
+    }
+  ],
+  "game_results": [
+    {
+      "player_name": "Player",
+      "difficulty": "mixed",
+      "score": 0,
+      "asked_questions": 1,
+      "is_win": 0,
+      "created_at": "2026-05-19 08:59:10"
+    },
+    {
+      "player_name": "Player",
+      "difficulty": "mixed",
+      "score": 0,
+      "asked_questions": 1,
+      "is_win": 0,
+      "created_at": "2026-05-19 08:59:07"
+    }
+  ]
+}

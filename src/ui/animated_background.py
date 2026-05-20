@@ -99,6 +99,9 @@ class AnimatedBackground:
                 tags="bg",
             )
 
+        # Keep background layers behind all screen content.
+        self.canvas.tag_lower("bg")
+
     def _draw_darken_overlay(self) -> None:
         if self.darken_alpha <= 0:
             return

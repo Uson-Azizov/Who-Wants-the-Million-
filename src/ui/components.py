@@ -22,6 +22,11 @@ class GlassButton(tk.Canvas):
         border_color: str | None = None,
         text_color: str | None = None,
         canvas_bg: str | None = None,
+        border_width: int = 2,
+        shadow_color: str | None = None,
+        shadow_offset: int = 0,
+        text_shadow_color: str | None = "#0c1a30",
+        text_shadow_offset: tuple[int, int] = (1, 1),
     ) -> None:
         self.theme = theme
         self.command = command
@@ -32,6 +37,11 @@ class GlassButton(tk.Canvas):
         self._hover_bg = hover_color or theme.button_hover
         self._border_color = border_color or theme.button_border
         self._text_color = text_color or theme.button_text
+        self._border_width = max(1, int(border_width))
+        self._shadow_color = shadow_color
+        self._shadow_offset = max(0, int(shadow_offset))
+        self._text_shadow_color = text_shadow_color
+        self._text_shadow_offset = (int(text_shadow_offset[0]), int(text_shadow_offset[1]))
 
         self._hover_target = 0.0
         self._hover_value = 0.0
@@ -129,34 +139,65 @@ class GlassButton(tk.Canvas):
         b_v = int(ba + (bb - ba) * t)
         return self._rgb_to_hex((r, g, b_v))
 
-    def _create_rounded_rect(self, x1: int, y1: int, x2: int, y2: int, r: int, **kwargs: object) -> int:
-        points = [
-            x1 + r,
-            y1,
-            x2 - r,
-            y1,
-            x2,
-            y1,
-            x2,
-            y1 + r,
-            x2,
-            y2 - r,
-            x2,
-            y2,
-            x2 - r,
-            y2,
-            x1 + r,
-            y2,
-            x1,
-            y2,
-            x1,
-            y2 - r,
-            x1,
-            y1 + r,
-            x1,
-            y1,
+    def _create_rounded_rect(
+        self,
+        x1: int,
+        y1: int,
+        x2: int,
+        y2: int,
+        r: int,
+        *,
+        fill: str,
+        outline: str = "",
+        width: int = 1,
+    ) -> None:
+        radius = max(0, min(int(r), (x2 - x1) // 2, (y2 - y1) // 2))
+
+        if radius == 0:
+            self.create_rectangle(x1, y1, x2, y2, fill=fill, outline=outline, width=width)
+            return
+
+        # Fill body. Slight overlaps avoid tiny corner gaps on Tk canvas.
+        self.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=fill, outline="")
+        self.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=fill, outline="")
+
+        corners = [
+            (x1, y1, x1 + radius * 2, y1 + radius * 2, 90),
+            (x2 - radius * 2, y1, x2, y1 + radius * 2, 0),
+            (x2 - radius * 2, y2 - radius * 2, x2, y2, 270),
+            (x1, y2 - radius * 2, x1 + radius * 2, y2, 180),
         ]
-        return self.create_polygon(points, smooth=True, splinesteps=24, **kwargs)
+        for cx1, cy1, cx2, cy2, start in corners:
+            self.create_arc(
+                cx1,
+                cy1,
+                cx2,
+                cy2,
+                start=start,
+                extent=90,
+                style="pieslice",
+                fill=fill,
+                outline="",
+            )
+
+        if outline:
+            self.create_line(x1 + radius, y1, x2 - radius, y1, fill=outline, width=width)
+            self.create_line(x2, y1 + radius, x2, y2 - radius, fill=outline, width=width)
+            self.create_line(x1 + radius, y2, x2 - radius, y2, fill=outline, width=width)
+            self.create_line(x1, y1 + radius, x1, y2 - radius, fill=outline, width=width)
+
+            for cx1, cy1, cx2, cy2, start in corners:
+                self.create_arc(
+                    cx1,
+                    cy1,
+                    cx2,
+                    cy2,
+                    start=start,
+                    extent=90,
+                    style="arc",
+                    outline=outline,
+                    width=width,
+                )
 
     def _draw_button(self) -> None:
         self.delete("all")
@@ -179,17 +220,38 @@ class GlassButton(tk.Canvas):
             border = self._blend(self._border_color, self.theme.text_primary, self._hover_value * 0.35)
             text_color = self._text_color
 
-        self._create_rounded_rect(x1, y1, x2, y2, self._radius, fill=fill, outline=border, width=2)
+        if self._shadow_color and self._shadow_offset > 0:
+            self._create_rounded_rect(
+                x1,
+                y1 + self._shadow_offset,
+                x2,
+                y2 + self._shadow_offset,
+                self._radius,
+                fill=self._shadow_color,
+                outline="",
+            )
+
+        self._create_rounded_rect(
+            x1,
+            y1,
+            x2,
+            y2,
+            self._radius,
+            fill=fill,
+            outline=border,
+            width=self._border_width,
+        )
 
         center_x = width // 2
         center_y = (y1 + y2) // 2
-        self.create_text(
-            center_x + 1,
-            center_y + 1,
-            text=self.text,
-            font=self.font,
-            fill="#0c1a30",
-        )
+        if self._text_shadow_color:
+            self.create_text(
+                center_x + self._text_shadow_offset[0],
+                center_y + self._text_shadow_offset[1],
+                text=self.text,
+                font=self.font,
+                fill=self._text_shadow_color,
+            )
         self.create_text(
             center_x,
             center_y,
@@ -201,9 +263,34 @@ class GlassButton(tk.Canvas):
     def configure(self, cnf: dict | None = None, **kwargs: object) -> object:  # type: ignore[override]
         state = kwargs.pop("state", None)
         text = kwargs.pop("text", None)
+        font = kwargs.pop("font", None)
+        height = kwargs.pop("height", None)
+        radius = kwargs.pop("radius", None)
+        border_width = kwargs.pop("border_width", None)
+        shadow_color = kwargs.pop("shadow_color", None)
+        shadow_offset = kwargs.pop("shadow_offset", None)
+        text_shadow_color = kwargs.pop("text_shadow_color", None)
+        text_shadow_offset = kwargs.pop("text_shadow_offset", None)
 
         if text is not None:
             self.text = str(text)
+        if font is not None:
+            self.font = font
+        if height is not None:
+            self._height = max(40, int(height))
+            kwargs["height"] = self._height
+        if radius is not None:
+            self._radius = max(8, int(radius))
+        if border_width is not None:
+            self._border_width = max(1, int(border_width))
+        if shadow_color is not None:
+            self._shadow_color = None if shadow_color == "" else str(shadow_color)
+        if shadow_offset is not None:
+            self._shadow_offset = max(0, int(shadow_offset))
+        if text_shadow_color is not None:
+            self._text_shadow_color = None if text_shadow_color == "" else str(text_shadow_color)
+        if text_shadow_offset is not None:
+            self._text_shadow_offset = (int(text_shadow_offset[0]), int(text_shadow_offset[1]))
 
         if state is not None:
             self._state = str(state)
