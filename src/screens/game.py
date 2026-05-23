@@ -1,10 +1,19 @@
 from __future__ import annotations
 
+import random
 import tkinter as tk
 
+from src.config import IMAGES_DIR
 from src.models import Difficulty, Question
 from src.screens.base import Screen
 from src.ui.components import GlassButton
+
+try:
+    from PIL import Image, ImageTk
+except Exception:  # pragma: no cover - optional dependency
+    Image = None
+    ImageTk = None
+
 
 EASY_AMOUNTS = [500, 1000, 2000, 3000, 5000]
 MEDIUM_AMOUNTS = [10000, 15000, 25000, 50000]
@@ -16,13 +25,44 @@ PRIZE_LEVELS: list[tuple[int, Difficulty]] = (
     + [(amount, Difficulty.HARD) for amount in HARD_AMOUNTS]
 )
 
+DESIGN_WIDTH = 1440
+DESIGN_HEIGHT = 1024
+LAYOUT_SCALE_BOOST = 1.0
+LAYOUT_SHIFT_Y = 0
 BG_PURPLE = "#2a0288"
-PANEL_PURPLE = "#2a0288"
 CARD_BG = "#060045"
-ACCENT_CYAN = "#23dcff"
-ACCENT_ORANGE = "#ff9d19"
+ACCENT_CYAN = "#5adcf4"
+ACCENT_ORANGE = "#f39a1f"
 TEXT_PRIMARY = "#f4f8ff"
 TEXT_SECONDARY = "#9fc8ff"
+TEXT_MUTED = "#69739B"
+LIFELINE_USED = "#5D617A"
+
+MENU_SPEC = (34, 52, 236, 66, 34)
+PROGRESS_SPEC = (548, 54, 344, 74, 36)
+AMOUNT_SPEC = (1068, 54, 332, 74, 36)
+QUESTION_RECT = (160, 226, 1120, 106)
+LIFELINE_CENTERS = {
+    "phoenix": (255, 540),
+    "5050": (720, 540),
+    "2x": (1185, 540),
+}
+ANSWER_LAYOUT = {
+    0: (150, 748),
+    1: (780, 748),
+    2: (150, 872),
+    3: (780, 872),
+}
+ANSWER_TOP_LAYOUT = {
+    0: (150, 748),
+    1: (780, 748),
+}
+ANSWER_BADGE_SIZE = 76
+ANSWER_BUTTON_SIZE = (520, 88)
+LIFELINE_OUTER_RADIUS = 64
+LIFELINE_PHOENIX_PATH = IMAGES_DIR / "lifeline_phoenix.png"
+LIFELINE_5050_PATH = IMAGES_DIR / "lifeline_5050.png"
+LIFELINE_2X_PATH = IMAGES_DIR / "lifeline_2x.png"
 
 
 class GameScreen(Screen):
@@ -33,185 +73,325 @@ class GameScreen(Screen):
         self.canvas.pack(fill="both", expand=True)
         self.canvas.bind("<Configure>", self._on_canvas_configure)
 
-        self.background_base_id = self.canvas.create_rectangle(0, 0, 0, 0, fill=BG_PURPLE, outline="", tags="bg")
-        self.background_tint_id = self.canvas.create_rectangle(
-            0,
-            0,
-            0,
-            0,
-            fill=BG_PURPLE,
-            outline="",
-            tags="bg",
-        )
+        self.stage_frame = tk.Frame(self.canvas, bg=BG_PURPLE, highlightthickness=0, bd=0)
+        self.stage_frame.pack_propagate(False)
+        self.stage_window = self.canvas.create_window(0, 0, window=self.stage_frame, anchor="nw")
 
-        self.root_panel = tk.Frame(
-            self.canvas,
-            bg=BG_PURPLE,
-            highlightthickness=0,
-            padx=20,
-            pady=14,
-        )
-        self.root_panel_window = self.canvas.create_window(0, 0, window=self.root_panel, anchor="n")
+        self.scale = 1.0
+        self.stage_left = 0
+        self.stage_top = 0
+        self.stage_width = DESIGN_WIDTH
+        self.stage_height = DESIGN_HEIGHT
 
         self.current_question: Question | None = None
         self.answer_buttons: dict[int, GlassButton] = {}
+        self.answer_wrappers: dict[int, tk.Frame] = {}
         self.answer_badges: dict[int, tuple[tk.Canvas, int, int]] = {}
+        self.hidden_answers: set[int] = set()
         self.pending_next_question = False
         self.result_saved = False
         self.level_index = 0
+        self._after_jobs: set[str] = set()
+        self.lifeline_used = {"phoenix": False, "5050": False, "2x": False}
+        self.lifeline_armed = {"phoenix": False, "2x": False}
+        self.lifeline_canvases: dict[str, tk.Canvas] = {}
+        self.lifeline_images: dict[str, ImageTk.PhotoImage | None] = {}
+        self._lifeline_icon_sources = {
+            "phoenix": self._load_icon_source(LIFELINE_PHOENIX_PATH, white_to_alpha=True),
+            "5050": self._load_icon_source(LIFELINE_5050_PATH, white_to_alpha=False),
+            "2x": self._load_icon_source(LIFELINE_2X_PATH, white_to_alpha=True),
+        }
 
-        self._build_content()
+        self._build_stage()
         self.on_resize(self.app.width, self.app.height)
         self._load_question()
 
-    def _build_content(self) -> None:
-        self._build_header()
-        self._build_question_block()
-        self._build_lifelines()
-        self._build_answers()
+    def _load_icon_source(self, path, *, white_to_alpha: bool):
+        if Image is None or not path.exists():
+            return None
+        try:
+            image = Image.open(path).convert("RGBA")
+        except Exception:
+            return None
 
-    def _build_header(self) -> None:
-        header = tk.Frame(self.root_panel, bg=PANEL_PURPLE)
-        header.pack(fill="x", pady=(0, 12))
-        header.columnconfigure(1, weight=1)
+        pixels = image.load()
+        for y in range(image.height):
+            for x in range(image.width):
+                r, g, b, a = pixels[x, y]
+                if white_to_alpha and a and r > 245 and g > 245 and b > 245:
+                    pixels[x, y] = (255, 255, 255, 0)
 
+        bbox = image.getbbox()
+        if bbox:
+            image = image.crop(bbox)
+        return image
+
+    @staticmethod
+    def _fit_stage(width: int, height: int) -> tuple[float, int, int, int, int]:
+        scale = min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT) * LAYOUT_SCALE_BOOST
+        stage_width = max(1, int(DESIGN_WIDTH * scale))
+        stage_height = max(1, int(DESIGN_HEIGHT * scale))
+        left = (width - stage_width) // 2
+        top = (height - stage_height) // 2 + int(LAYOUT_SHIFT_Y * scale)
+        return scale, left, top, stage_width, stage_height
+
+    def _font(self, size: int, weight: str = "bold") -> tuple[str, int, str]:
+        return ("Arial", max(10, int(size * self.scale * 0.84)), weight)
+
+    def _place_scaled(self, widget: tk.Misc, spec: tuple[int, int, int, int]) -> None:
+        x, y, w, h = spec
+        widget.place(
+            x=int(x * self.scale),
+            y=int(y * self.scale),
+            width=max(1, int(w * self.scale)),
+            height=max(1, int(h * self.scale)),
+        )
+
+    def _build_stage(self) -> None:
         self.menu_btn = GlassButton(
-            header,
+            self.stage_frame,
             text="Меню",
             command=self.app.open_menu,
             theme=self.app.theme,
-            font=("Arial", 14, "bold"),
-            width=11,
-            height=46,
-            radius=22,
+            font=("Arial", 18, "bold"),
+            width=10,
+            height=72,
+            radius=34,
             bg_color=CARD_BG,
             hover_color="#101060",
             border_color=ACCENT_CYAN,
             text_color=TEXT_PRIMARY,
-            canvas_bg=PANEL_PURPLE,
+            canvas_bg=BG_PURPLE,
+            border_width=3,
         )
-        self.menu_btn.grid(row=0, column=0, sticky="w")
 
         self.progress_btn = GlassButton(
-            header,
-            text="1/15",
+            self.stage_frame,
+            text="Раунд 1/15",
             command=lambda: None,
             theme=self.app.theme,
-            font=("Arial", 18, "bold"),
-            width=12,
-            height=46,
-            radius=22,
+            font=("Arial", 20, "bold"),
+            width=18,
+            height=72,
+            radius=34,
             bg_color=CARD_BG,
             hover_color="#101060",
             border_color=ACCENT_CYAN,
             text_color=TEXT_PRIMARY,
-            canvas_bg=PANEL_PURPLE,
+            canvas_bg=BG_PURPLE,
+            border_width=3,
         )
-        self.progress_btn.grid(row=0, column=1)
 
         self.amount_btn = GlassButton(
-            header,
+            self.stage_frame,
             text="500сом",
             command=lambda: None,
             theme=self.app.theme,
-            font=("Arial", 18, "bold"),
-            width=13,
-            height=46,
-            radius=22,
+            font=("Arial", 20, "bold"),
+            width=12,
+            height=72,
+            radius=34,
             bg_color=CARD_BG,
             hover_color="#101060",
             border_color=ACCENT_CYAN,
             text_color=TEXT_PRIMARY,
-            canvas_bg=PANEL_PURPLE,
+            canvas_bg=BG_PURPLE,
+            border_width=3,
         )
-        self.amount_btn.grid(row=0, column=2, sticky="e")
 
-    def _build_question_block(self) -> None:
-        question_wrap = tk.Frame(
-            self.root_panel,
+        self.question_wrap = tk.Frame(
+            self.stage_frame,
             bg=CARD_BG,
             highlightthickness=4,
             highlightbackground=ACCENT_CYAN,
-            padx=28,
-            pady=22,
+            bd=0,
         )
-        question_wrap.pack(fill="x", pady=(92, 20))
-
-        question_row = tk.Frame(question_wrap, bg=CARD_BG)
-        question_row.pack(fill="x")
-        question_row.columnconfigure(1, weight=1)
-
         self.question_prefix_label = tk.Label(
-            question_row,
+            self.question_wrap,
             text="Вопрос:",
             bg=CARD_BG,
             fg=ACCENT_CYAN,
-            font=("Arial", 22, "bold"),
-            anchor="nw",
+            anchor="w",
         )
-        self.question_prefix_label.grid(row=0, column=0, sticky="nw", padx=(0, 8))
-
         self.question_label = tk.Label(
-            question_row,
+            self.question_wrap,
             text="",
             bg=CARD_BG,
             fg=TEXT_PRIMARY,
-            font=("Arial", 22, "bold"),
+            anchor="w",
             justify="left",
-            anchor="nw",
-            wraplength=900,
+            wraplength=940,
         )
-        self.question_label.grid(row=0, column=1, sticky="nwe")
-
-    def _build_lifelines(self) -> None:
-        lifelines = tk.Frame(self.root_panel, bg=PANEL_PURPLE)
-        lifelines.pack(fill="x", pady=(14, 16))
-        lifelines.columnconfigure(0, weight=1)
-        lifelines.columnconfigure(1, weight=1)
-        lifelines.columnconfigure(2, weight=1)
-
-        self.hint_bird = self._build_round_hint(lifelines, "🕊", ACCENT_ORANGE)
-        self.hint_bird.grid(row=0, column=0, sticky="w", padx=(6, 0))
-
-        self.hint_5050 = self._build_round_hint(lifelines, "50\n50", ACCENT_ORANGE)
-        self.hint_5050.grid(row=0, column=1)
-
-        self.hint_2x = self._build_round_hint(lifelines, "2X", ACCENT_ORANGE)
-        self.hint_2x.grid(row=0, column=2, sticky="e", padx=(0, 6))
 
         self.feedback_label = tk.Label(
-            lifelines,
+            self.stage_frame,
             text="",
-            bg=PANEL_PURPLE,
+            bg=BG_PURPLE,
             fg=TEXT_SECONDARY,
-            font=("Arial", 13, "bold"),
             anchor="center",
+            justify="center",
         )
-        self.feedback_label.grid(row=1, column=0, columnspan=3, sticky="ew", pady=(4, 0))
 
-    def _build_round_hint(self, parent: tk.Misc, text: str, border_color: str) -> tk.Canvas:
-        hint = tk.Canvas(parent, width=104, height=104, highlightthickness=0, bd=0, bg=PANEL_PURPLE)
-        hint.create_oval(8, 8, 96, 96, outline=border_color, width=4, fill=CARD_BG)
-        hint.create_text(52, 52, text=text, fill=ACCENT_CYAN, font=("Arial", 23, "bold"), justify="center")
-        return hint
+        for name in ("phoenix", "5050", "2x"):
+            canvas = tk.Canvas(self.stage_frame, highlightthickness=0, bd=0, bg=BG_PURPLE, cursor="hand2")
+            canvas.bind("<Button-1>", lambda _event, lifeline=name: self._activate_lifeline(lifeline))
+            self.lifeline_canvases[name] = canvas
 
-    def _build_answers(self) -> None:
-        self.answers_grid = tk.Frame(self.root_panel, bg=PANEL_PURPLE)
-        self.answers_grid.pack(fill="x", pady=(24, 4), padx=0)
-        self.answers_grid.columnconfigure(0, weight=1, uniform="answer_col")
-        self.answers_grid.columnconfigure(1, weight=1, uniform="answer_col")
+        for index, letter in enumerate(("A", "B", "C", "D")):
+            wrap = tk.Frame(self.stage_frame, bg=BG_PURPLE, bd=0, highlightthickness=0)
+            badge = tk.Canvas(wrap, highlightthickness=0, bd=0, bg=BG_PURPLE)
+            oval_id = badge.create_oval(6, 6, ANSWER_BADGE_SIZE - 6, ANSWER_BADGE_SIZE - 6, outline=ACCENT_ORANGE, width=4, fill=CARD_BG)
+            text_id = badge.create_text(
+                ANSWER_BADGE_SIZE // 2,
+                ANSWER_BADGE_SIZE // 2,
+                text=letter,
+                fill=ACCENT_CYAN,
+                font=("Arial", 28, "bold"),
+            )
+            badge.place(x=0, y=0, width=ANSWER_BADGE_SIZE, height=ANSWER_BADGE_SIZE)
+
+            button = GlassButton(
+                wrap,
+                text="",
+                command=lambda i=index: self._submit_answer(i),
+                theme=self.app.theme,
+                font=("Arial", 16, "bold"),
+                width=33,
+                height=ANSWER_BUTTON_SIZE[1],
+                radius=30,
+                bg_color=CARD_BG,
+                hover_color="#101060",
+                border_color=ACCENT_CYAN,
+                text_color=TEXT_PRIMARY,
+                canvas_bg=BG_PURPLE,
+                border_width=3,
+            )
+            self.answer_badges[index] = (badge, oval_id, text_id)
+            self.answer_buttons[index] = button
+            self.answer_wrappers[index] = wrap
+
+    def _draw_lifeline(self, name: str) -> None:
+        canvas = self.lifeline_canvases[name]
+        size = max(72, int(140 * self.scale))
+        canvas.configure(width=size, height=size)
+        canvas.delete("all")
+
+        used = self.lifeline_used[name]
+        armed = self.lifeline_armed.get(name, False)
+
+        cx = size // 2
+        cy = size // 2
+
+        icon_source = self._lifeline_icon_sources.get(name)
+        if icon_source is not None and Image is not None:
+            icon_size = max(76, int(size * 0.86))
+            resample = Image.Resampling.LANCZOS if hasattr(Image, "Resampling") else Image.LANCZOS
+            icon = icon_source.resize((icon_size, icon_size), resample)
+            if used:
+                icon = icon.convert("LA").convert("RGBA")
+            photo = ImageTk.PhotoImage(icon)
+            self.lifeline_images[name] = photo
+            canvas.create_image(cx, cy, image=photo)
+        elif name == "5050":
+            number_color = LIFELINE_USED if used else ACCENT_CYAN
+            canvas.create_text(cx - int(14 * self.scale), cy - int(14 * self.scale), text="50", fill=number_color, font=self._font(27))
+            canvas.create_text(cx + int(16 * self.scale), cy + int(16 * self.scale), text="50", fill=number_color, font=self._font(27))
+        elif name == "2x":
+            canvas.create_text(cx, cy, text="2X", fill=LIFELINE_USED if used else ACCENT_CYAN, font=self._font(24))
+        else:
+            canvas.create_text(cx, cy, text="P", fill=LIFELINE_USED if used else ACCENT_CYAN, font=self._font(24))
+
+        if armed and not used:
+            canvas.create_text(size // 2, int(size * 0.88), text="ON", fill=ACCENT_CYAN, font=self._font(11))
 
     def _clear_answer_buttons(self) -> None:
-        for child in self.answers_grid.winfo_children():
-            child.destroy()
-        self.answer_buttons = {}
-        self.answer_badges = {}
+        for wrap in self.answer_wrappers.values():
+            wrap.place_forget()
+        self.hidden_answers = set()
+
+    def _schedule_after(self, delay_ms: int, callback) -> None:
+        job_id: str | None = None
+
+        def runner() -> None:
+            if job_id is not None:
+                self._after_jobs.discard(job_id)
+            if self.container.winfo_exists():
+                callback()
+
+        job_id = self.container.after(delay_ms, runner)
+        self._after_jobs.add(job_id)
+
+    def _cancel_pending_jobs(self) -> None:
+        for job_id in list(self._after_jobs):
+            try:
+                self.container.after_cancel(job_id)
+            except tk.TclError:
+                pass
+            self._after_jobs.discard(job_id)
+
+    def _reset_question_state(self) -> None:
+        self.pending_next_question = False
+        self._clear_answer_buttons()
+
+    def _set_badge_disabled(self, index: int) -> None:
+        badge = self.answer_badges.get(index)
+        if badge is None:
+            return
+        badge_canvas, oval_id, text_id = badge
+        badge_canvas.itemconfigure(oval_id, outline=TEXT_MUTED, fill="#14183b", width=max(3, int(4 * self.scale)))
+        badge_canvas.itemconfigure(text_id, fill=TEXT_MUTED)
+
+    def _activate_lifeline(self, name: str) -> None:
+        if self.current_question is None or self.pending_next_question:
+            return
+
+        if name == "5050":
+            if self.lifeline_used["5050"]:
+                self.feedback_label.configure(text="50/50 уже использован")
+                return
+            self.lifeline_used["5050"] = True
+            self._apply_fifty_fifty()
+            self.feedback_label.configure(text="50/50: убраны два неверных варианта")
+            self._draw_lifeline("5050")
+            return
+
+        if name == "2x":
+            if self.lifeline_used["2x"]:
+                self.feedback_label.configure(text="2X уже использован")
+                return
+            self.lifeline_used["2x"] = True
+            self.lifeline_armed["2x"] = True
+            self.feedback_label.configure(text="2X активирован: при верном ответе переход на +2 уровня")
+            self._draw_lifeline("2x")
+            return
+
+        if self.lifeline_used["phoenix"]:
+            self.feedback_label.configure(text="Феникс уже использован")
+            return
+        if self.lifeline_armed["phoenix"]:
+            self.feedback_label.configure(text="Феникс уже активирован")
+            return
+        self.lifeline_armed["phoenix"] = True
+        self.feedback_label.configure(text="Феникс активирован: одна ошибка будет прощена")
+        self._draw_lifeline("phoenix")
+
+    def _apply_fifty_fifty(self) -> None:
+        if self.current_question is None:
+            return
+        wrong_indices = [index for index in range(4) if index != self.current_question.correct_index]
+        removed = random.sample(wrong_indices, k=2)
+        for index in removed:
+            self.hidden_answers.add(index)
+            button = self.answer_buttons.get(index)
+            if button is not None:
+                button.configure(state="disabled")
+            self._set_badge_disabled(index)
+        self._layout_answers()
 
     def _mark_selected_badge(self, selected_index: int, is_correct: bool) -> None:
         badge = self.answer_badges.get(selected_index)
         if badge is None:
             return
-
         badge_canvas, oval_id, text_id = badge
         if is_correct:
             outline = "#2fff7f"
@@ -221,12 +401,13 @@ class GameScreen(Screen):
             outline = "#ff3b30"
             fill = "#3a0606"
             text_color = "#ff9e97"
-
-        badge_canvas.itemconfigure(oval_id, outline=outline, fill=fill, width=5)
+        badge_canvas.itemconfigure(oval_id, outline=outline, fill=fill, width=max(3, int(4 * self.scale)))
         badge_canvas.itemconfigure(text_id, fill=text_color)
 
     def _set_answers_enabled(self, enabled: bool) -> None:
-        for button in self.answer_buttons.values():
+        for index, button in self.answer_buttons.items():
+            if index in self.hidden_answers:
+                continue
             button.configure(state="normal" if enabled else "disabled")
 
     def _set_question_text(self, prefix: str, body: str) -> None:
@@ -239,90 +420,98 @@ class GameScreen(Screen):
     def _update_header_progress(self) -> None:
         current_step = min(self.level_index + 1, len(PRIZE_LEVELS))
         total_steps = len(PRIZE_LEVELS)
-        self.progress_btn.configure(text=f"{current_step}/{total_steps}")
-
+        self.progress_btn.configure(text=f"Раунд {current_step}/{total_steps}")
         target_amount = PRIZE_LEVELS[min(self.level_index, len(PRIZE_LEVELS) - 1)][0]
         self.amount_btn.configure(text=self._format_amount(target_amount))
 
+    def _layout_answers(self) -> None:
+        badge_size = max(52, int(ANSWER_BADGE_SIZE * self.scale))
+        button_w = max(340, int(ANSWER_BUTTON_SIZE[0] * self.scale))
+        button_h = max(46, int(ANSWER_BUTTON_SIZE[1] * self.scale))
+        button_gap = max(14, int(18 * self.scale))
+        button_right_pad = max(6, int(8 * self.scale))
+
+        visible_indices = [index for index in range(4) if index not in self.hidden_answers]
+        if len(visible_indices) == 2:
+            positions = list(ANSWER_TOP_LAYOUT.values())
+        else:
+            positions = [ANSWER_LAYOUT[index] for index in visible_indices]
+
+        for index, wrap in self.answer_wrappers.items():
+            if index in self.hidden_answers:
+                wrap.place_forget()
+                continue
+
+            pos = positions[visible_indices.index(index)]
+            x, y = pos
+            x_px = int(x * self.scale)
+            y_px = int(y * self.scale)
+            wrap.place(
+                x=x_px,
+                y=y_px,
+                width=badge_size + button_gap + button_w + button_right_pad,
+                height=max(badge_size, button_h),
+            )
+
+            badge_canvas, _, _ = self.answer_badges[index]
+            badge_canvas.configure(width=badge_size, height=badge_size)
+            badge_canvas.place(x=0, y=max(0, (button_h - badge_size) // 2), width=badge_size, height=badge_size)
+            oval_id = self.answer_badges[index][1]
+            text_id = self.answer_badges[index][2]
+            badge_canvas.coords(oval_id, 6, 6, badge_size - 6, badge_size - 6)
+            badge_canvas.coords(text_id, badge_size // 2, badge_size // 2)
+            badge_canvas.itemconfigure(text_id, font=self._font(26))
+            button = self.answer_buttons[index]
+            button.place(x=badge_size + button_gap, y=0, width=button_w, height=button_h)
+            button.configure(
+                font=self._font(15),
+                height=button_h,
+                radius=max(20, int(28 * self.scale)),
+                border_width=max(2, int(3 * self.scale)),
+            )
+
     def _load_question(self) -> None:
-        self.pending_next_question = False
-        self._clear_answer_buttons()
+        self._reset_question_state()
 
         if self.level_index >= len(PRIZE_LEVELS):
             self._finish_game_win()
             return
 
         self._update_header_progress()
-        target_amount, difficulty = PRIZE_LEVELS[self.level_index]
-
+        _, difficulty = PRIZE_LEVELS[self.level_index]
         self.current_question = self.app.game_service.get_next_question(difficulty)
         if self.current_question is None:
             self._set_question_text("Ошибка:", f"Недостаточно вопросов ({difficulty.value})")
             self.feedback_label.configure(text="Возврат в меню...")
-            self.container.after(1200, self.app.open_menu)
+            self._schedule_after(1200, self.app.open_menu)
             return
 
         self._set_question_text("Вопрос:", self.current_question.text)
         self.feedback_label.configure(text="")
 
-        answer_style = dict(
-            theme=self.app.theme,
-            font=("Arial", 14, "bold"),
-            width=26,
-            height=62,
-            radius=24,
-            bg_color=CARD_BG,
-            hover_color="#0f1168",
-            border_color=ACCENT_CYAN,
-            text_color=TEXT_PRIMARY,
-            canvas_bg=PANEL_PURPLE,
-        )
+        for index, button in self.answer_buttons.items():
+            button.configure(text=self.current_question.options[index], state="normal")
+            badge_canvas, oval_id, text_id = self.answer_badges[index]
+            badge_canvas.itemconfigure(oval_id, outline=ACCENT_ORANGE, fill=CARD_BG, width=max(3, int(4 * self.scale)))
+            badge_canvas.itemconfigure(text_id, fill=ACCENT_CYAN)
 
-        layout = [
-            (0, 0, 0, "A"),
-            (0, 1, 2, "C"),
-            (1, 0, 1, "B"),
-            (1, 1, 3, "D"),
-        ]
-
-        for row, col, index, letter in layout:
-            option_text = self.current_question.options[index]
-
-            wrap = tk.Frame(self.answers_grid, bg=PANEL_PURPLE)
-            wrap.grid(row=row, column=col, sticky="ew", padx=4, pady=10)
-            wrap.columnconfigure(1, weight=1)
-            wrap.columnconfigure(0, minsize=70)
-
-            tag = tk.Canvas(wrap, width=66, height=66, highlightthickness=0, bd=0, bg=PANEL_PURPLE)
-            oval_id = tag.create_oval(6, 6, 60, 60, outline=ACCENT_ORANGE, width=4, fill=CARD_BG)
-            text_id = tag.create_text(33, 33, text=letter, fill=ACCENT_CYAN, font=("Arial", 24, "bold"))
-            tag.grid(row=0, column=0, padx=(0, 6))
-            self.answer_badges[index] = (tag, oval_id, text_id)
-
-            button = GlassButton(
-                wrap,
-                text=option_text,
-                command=lambda i=index: self._submit_answer(i),
-                **answer_style,
-            )
-            button.grid(row=0, column=1, sticky="ew")
-            self.answer_buttons[index] = button
+        self._layout_answers()
 
     def _finish_game_win(self) -> None:
         top_amount = PRIZE_LEVELS[-1][0]
         self._set_question_text("Итог:", f"Поздравляем! Вы дошли до {self._format_amount(top_amount)}")
         self.feedback_label.configure(text="Игра завершена")
-        self.progress_btn.configure(text=f"{len(PRIZE_LEVELS)}/{len(PRIZE_LEVELS)}")
+        self.progress_btn.configure(text=f"Раунд {len(PRIZE_LEVELS)}/{len(PRIZE_LEVELS)}")
         self.amount_btn.configure(text=self._format_amount(top_amount))
 
         if not self.result_saved:
             self.app.save_game_result("mixed", True)
             self.result_saved = True
 
-        self.container.after(1400, self.app.open_menu)
+        self._schedule_after(1400, self.app.open_menu)
 
     def _submit_answer(self, selected_index: int) -> None:
-        if self.current_question is None or self.pending_next_question:
+        if self.current_question is None or self.pending_next_question or selected_index in self.hidden_answers:
             return
 
         is_correct = self.app.game_service.submit_answer(selected_index)
@@ -330,37 +519,77 @@ class GameScreen(Screen):
         self._mark_selected_badge(selected_index, is_correct)
 
         if is_correct:
-            self.feedback_label.configure(text="Верно!")
-            self.level_index += 1
+            advance = 2 if self.lifeline_armed["2x"] else 1
+            if self.lifeline_armed["2x"]:
+                self.lifeline_armed["2x"] = False
+                self._draw_lifeline("2x")
+                self.feedback_label.configure(text="Верно! 2X активен: переход на +2 уровня")
+            else:
+                self.feedback_label.configure(text="Верно!")
+            if self.lifeline_armed["phoenix"] and not self.lifeline_used["phoenix"]:
+                self.lifeline_armed["phoenix"] = False
+                self._draw_lifeline("phoenix")
+            self.level_index += advance
+            self._update_header_progress()
             self.pending_next_question = True
-            self.container.after(450, self._load_question)
+            self._schedule_after(450, self._load_question)
+            return
+
+        if self.lifeline_armed["phoenix"] and not self.lifeline_used["phoenix"]:
+            self.lifeline_armed["phoenix"] = False
+            self.lifeline_used["phoenix"] = True
+            self.app.game_service.session.completed = False
+            self._draw_lifeline("phoenix")
+            self.feedback_label.configure(text="Феникс спасает вас. Новый вопрос того же уровня...")
+            self.pending_next_question = True
+            self._schedule_after(700, self._load_question)
             return
 
         self.feedback_label.configure(text="Неправильно. Возврат в главное меню...")
         if not self.result_saved:
             self.app.save_game_result("mixed", False)
             self.result_saved = True
-        self.container.after(900, self.app.open_menu)
+        self._schedule_after(900, self.app.open_menu)
+
+    def _apply_scaled_layout(self) -> None:
+        self.menu_btn.configure(font=self._font(17), height=max(42, int(MENU_SPEC[3] * self.scale)), radius=max(22, int(MENU_SPEC[4] * self.scale)))
+        self.progress_btn.configure(font=self._font(19), height=max(42, int(PROGRESS_SPEC[3] * self.scale)), radius=max(22, int(PROGRESS_SPEC[4] * self.scale)))
+        self.amount_btn.configure(font=self._font(19), height=max(42, int(AMOUNT_SPEC[3] * self.scale)), radius=max(22, int(AMOUNT_SPEC[4] * self.scale)))
+
+        self._place_scaled(self.menu_btn, MENU_SPEC[:4])
+        self._place_scaled(self.progress_btn, PROGRESS_SPEC[:4])
+        self._place_scaled(self.amount_btn, AMOUNT_SPEC[:4])
+
+        qx, qy, qw, qh = QUESTION_RECT
+        self.question_wrap.place(x=int(qx * self.scale), y=int(qy * self.scale), width=max(300, int(qw * self.scale)), height=max(78, int(qh * self.scale)))
+        self.question_prefix_label.configure(font=self._font(25))
+        self.question_label.configure(font=self._font(21), wraplength=max(220, int((qw - 300) * self.scale)))
+        self.question_prefix_label.place(x=int(28 * self.scale), y=int(26 * self.scale), height=max(24, int(30 * self.scale)))
+        self.question_label.place(
+            x=int(180 * self.scale),
+            y=int(24 * self.scale),
+            width=max(220, int((qw - 255) * self.scale)),
+            height=max(26, int(34 * self.scale)),
+        )
+
+        feedback_y = int(646 * self.scale)
+        self.feedback_label.configure(font=self._font(12))
+        self.feedback_label.place(x=int(0.18 * self.stage_width), y=feedback_y, width=int(0.64 * self.stage_width))
+
+        for name, center in LIFELINE_CENTERS.items():
+            cx, cy = center
+            size = max(82, int(160 * self.scale))
+            self.lifeline_canvases[name].place(x=int(cx * self.scale - size / 2), y=int(cy * self.scale - size / 2), width=size, height=size)
+            self._draw_lifeline(name)
+
+        self._layout_answers()
 
     def on_resize(self, width: int, height: int) -> None:
-        canvas_w = self.canvas.winfo_width()
-        canvas_h = self.canvas.winfo_height()
-        draw_w = canvas_w if canvas_w > 1 else width
-        draw_h = canvas_h if canvas_h > 1 else height
-
-        panel_width = min(int(draw_w * 0.74), 1120)
-        panel_center_x = draw_w // 2
-        panel_y = max(8, int(draw_h * 0.02))
-
-        self.canvas.coords(self.background_base_id, 0, 0, draw_w, draw_h)
-        self.canvas.coords(self.background_tint_id, 0, 0, draw_w, draw_h)
-
-        self.canvas.coords(self.root_panel_window, panel_center_x, panel_y)
-        self.canvas.itemconfigure(self.root_panel_window, width=panel_width)
-        self.question_label.configure(wraplength=max(360, int(panel_width * 0.66)))
-
-        self.canvas.tag_raise("bg")
-        self.canvas.tag_raise(self.root_panel_window)
+        self.scale, self.stage_left, self.stage_top, self.stage_width, self.stage_height = self._fit_stage(width, height)
+        self.canvas.coords(self.stage_window, self.stage_left, self.stage_top)
+        self.canvas.itemconfigure(self.stage_window, width=self.stage_width, height=self.stage_height)
+        self.stage_frame.configure(width=self.stage_width, height=self.stage_height)
+        self._apply_scaled_layout()
 
     def _on_canvas_configure(self, event: tk.Event) -> None:
         if event.width <= 1 or event.height <= 1:
@@ -369,6 +598,9 @@ class GameScreen(Screen):
 
     def on_escape(self) -> None:
         self.app.open_menu()
+
+    def on_destroy(self) -> None:
+        self._cancel_pending_jobs()
 
 
 class GameApp:

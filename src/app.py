@@ -45,13 +45,12 @@ class MillionaireGameApp:
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
         self.fullscreen = START_FULLSCREEN
+        self.windowed_size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
         if self.fullscreen:
-            self.root.attributes("-fullscreen", True)
+            self._apply_fullscreen_mode()
         else:
-            self.root.geometry(f"{SCREEN_WIDTH}x{SCREEN_HEIGHT}")
-
-        self.root.minsize(980, 620)
+            self._apply_windowed_mode()
 
         self.status_text_var = tk.StringVar(value="Главное меню")
         self.player_name = PLAYER_NAME
@@ -121,7 +120,27 @@ class MillionaireGameApp:
 
     def toggle_fullscreen(self) -> None:
         self.fullscreen = not self.fullscreen
-        self.root.attributes("-fullscreen", self.fullscreen)
+        if self.fullscreen:
+            self._apply_fullscreen_mode()
+            return
+        self._apply_windowed_mode()
+
+    def _apply_fullscreen_mode(self) -> None:
+        self.root.resizable(True, True)
+        self.root.attributes("-fullscreen", True)
+
+    def _apply_windowed_mode(self) -> None:
+        width, height = self.windowed_size
+        self.root.attributes("-fullscreen", False)
+        self.root.resizable(False, False)
+        self.root.geometry(f"{width}x{height}")
+        self.root.update_idletasks()
+
+        screen_w = self.root.winfo_screenwidth()
+        screen_h = self.root.winfo_screenheight()
+        pos_x = max((screen_w - width) // 2, 0)
+        pos_y = max((screen_h - height) // 2, 0)
+        self.root.geometry(f"{width}x{height}+{pos_x}+{pos_y}")
 
     def open_menu(self) -> None:
         self.status_text_var.set("Главное меню")

@@ -27,7 +27,6 @@ ENTRY_TEXT = "#1F1F1F"
 
 MENU_BUTTON = (-126, 34, 412, 122, 61)
 LOGO_RECT = (1257, 11, 172, 171)
-LOGO_RIGHT_MARGIN = -220
 LEFT_PANEL_RECT = (72, 190, 720, 650, 24)
 RIGHT_PANEL_RECT = (836, 190, 532, 650, 24)
 
@@ -249,7 +248,7 @@ class AdminPanelScreen(Screen):
         if self.logo_source is None:
             return
 
-        _, y, w, h = LOGO_RECT
+        x, y, w, h = LOGO_RECT
         width = max(40, int(w * self.scale))
         height = max(40, int(h * self.scale))
 
@@ -260,13 +259,11 @@ class AdminPanelScreen(Screen):
         else:
             self.logo_image = self.logo_source
 
-        margin = int(LOGO_RIGHT_MARGIN * self.scale)
-        x_pos = self.app.width - width - margin
-        self.canvas.create_image(x_pos, self._sy(y), image=self.logo_image, anchor="nw", tags="bg")
+        self.canvas.create_image(self._sx(x), self._sy(y), image=self.logo_image, anchor="nw", tags="bg")
 
     def _draw_menu_button(self) -> None:
         x, y, w, h, radius = MENU_BUTTON
-        x1 = x * self.scale
+        x1 = self._sx(x)
         y1 = self._sy(y)
         x2 = x1 + w * self.scale
         y2 = y1 + h * self.scale

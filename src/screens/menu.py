@@ -21,9 +21,9 @@ BUTTON_TOP = 621
 BUTTON_WIDTH = 478
 BUTTON_HEIGHT = 84
 BUTTON_GAP = 15
-LAYOUT_SCALE_BOOST = 1.04
-LAYOUT_SHIFT_X = 104
-LAYOUT_SHIFT_Y = 96
+LAYOUT_SCALE_BOOST = 1.0
+LAYOUT_SHIFT_X = 92
+LAYOUT_SHIFT_Y = 74
 
 
 @dataclass
@@ -92,8 +92,8 @@ class MenuScreen(Screen):
         scale = max(width / DESIGN_WIDTH, height / DESIGN_HEIGHT) * LAYOUT_SCALE_BOOST
         stage_width = max(1, int(DESIGN_WIDTH * scale))
         stage_height = max(1, int(DESIGN_HEIGHT * scale))
-        left = (width - stage_width) // 2 + int(LAYOUT_SHIFT_X * scale)
-        top = (height - stage_height) // 2 + int(LAYOUT_SHIFT_Y * scale)
+        left = (width - stage_width) // 2 + LAYOUT_SHIFT_X
+        top = (height - stage_height) // 2 + LAYOUT_SHIFT_Y
         return scale, left, top, stage_width, stage_height
 
     def _build_regions(self, scale: float, left: int, top: int) -> list[ButtonRegion]:
