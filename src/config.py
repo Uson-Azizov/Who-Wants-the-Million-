@@ -6,6 +6,7 @@ QUESTIONS_DIR = BASE_DIR / "questions"
 ANIMATIONS_DIR = BASE_DIR / "animations"
 IMAGES_DIR = BASE_DIR / "images"
 EXPORTS_DIR = BASE_DIR / "exports"
+SOUNDS_DIR = BASE_DIR / "sounds"
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -54,6 +55,13 @@ def _resolve_menu_background_path() -> Path:
 MENU_BACKGROUND_IMAGE_PATH = _resolve_menu_background_path()
 MENU_LAYOUT_IMAGE_PATH = IMAGES_DIR / "menu_layout.png"
 MENU_LOGO_IMAGE_PATH = IMAGES_DIR / "menu_logo.png"
+MENU_MUSIC_PATH = SOUNDS_DIR / "menu_loop.wav"
+QUESTION_MUSIC_PATH = SOUNDS_DIR / "question_loop.wav"
+SFX_CLICK_PATH = SOUNDS_DIR / "click.wav"
+SFX_LIFELINE_PATH = SOUNDS_DIR / "lifeline.wav"
+SFX_CORRECT_PATH = SOUNDS_DIR / "correct.wav"
+SFX_WRONG_PATH = SOUNDS_DIR / "wrong.wav"
+SFX_WIN_PATH = SOUNDS_DIR / "win.wav"
 
 QUESTIONS_FILES = {
     "easy": QUESTIONS_DIR / "easy.json",
@@ -87,3 +95,4 @@ SQLITE_DATABASE_PATH = Path(os.getenv("SQLITE_DATABASE_PATH", str(BASE_DIR / "st
 ADMIN_DEFAULT_LOGIN = os.getenv("ADMIN_DEFAULT_LOGIN", "admin")
 ADMIN_DEFAULT_CODE = os.getenv("ADMIN_DEFAULT_CODE", "mindset_admin_2026")
 PLAYER_NAME = os.getenv("PLAYER_NAME", "Player")
+DEFAULT_LANGUAGE = os.getenv("DEFAULT_LANGUAGE", "ru").strip().lower() or "ru"

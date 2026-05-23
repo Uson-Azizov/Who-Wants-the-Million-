@@ -54,10 +54,10 @@ class AdminLoginScreen(Screen):
         self.card_frame.grid_propagate(False)
         self.content_frame = tk.Frame(self.card_frame, bg=CARD_COLOR, bd=0, highlightthickness=0)
 
-        self.title_label = tk.Label(self.content_frame, text="Sign in", bg=CARD_COLOR, fg=TEXT_PRIMARY)
+        self.title_label = tk.Label(self.content_frame, text=self.app.tr("admin.login.title"), bg=CARD_COLOR, fg=TEXT_PRIMARY)
         self.subtitle_label = tk.Label(
             self.content_frame,
-            text="Sign in and start managing your candidates!",
+            text=self.app.tr("admin.login.subtitle"),
             bg=CARD_COLOR,
             fg=TEXT_MUTED,
         )
@@ -83,7 +83,7 @@ class AdminLoginScreen(Screen):
         self.options_frame = tk.Frame(self.content_frame, bg=CARD_COLOR, bd=0, highlightthickness=0)
         self.remember_check = tk.Checkbutton(
             self.options_frame,
-            text="Remember me",
+            text=self.app.tr("admin.login.remember"),
             variable=self.remember_var,
             bg=CARD_COLOR,
             fg=TEXT_PRIMARY,
@@ -96,13 +96,13 @@ class AdminLoginScreen(Screen):
         )
         self.forgot_label = tk.Label(
             self.options_frame,
-            text="Forgot password?",
+            text=self.app.tr("admin.login.forgot"),
             bg=CARD_COLOR,
             fg=TEXT_HINT,
         )
         self.submit_button = tk.Button(
             self.content_frame,
-            text="Start As Admin",
+            text=self.app.tr("admin.login.submit"),
             command=self._submit,
             relief="flat",
             bd=0,
@@ -276,7 +276,7 @@ class AdminLoginScreen(Screen):
         self.canvas.create_text(
             (x1 + x2) / 2,
             (y1 + y2) / 2,
-            text="Menu",
+            text=self.app.tr("common.menu"),
             fill=TEXT_PRIMARY,
             font=self._font(50, "bold"),
             tags="bg",
@@ -417,13 +417,13 @@ class AdminLoginScreen(Screen):
         login = self.login_var.get().strip()
         code = self.code_var.get().strip()
         if not login or not code:
-            self.message_var.set("Введите login и admins code.")
+            self.message_var.set(self.app.tr("admin.login.empty"))
             return
 
         success, message = self.app.verify_admin_login(login, code)
         self.app.status_text_var.set(message)
         if success:
-            self.message_var.set("Вход выполнен")
+            self.message_var.set(self.app.tr("admin.login.success"))
             self.root.after(150, self.app.open_admin_panel)
             return
         self.message_var.set(message)
@@ -434,6 +434,9 @@ class AdminLoginScreen(Screen):
 
     def on_escape(self) -> None:
         self.app.open_settings()
+
+    def on_language_changed(self) -> None:
+        self.app.open_admin_login()
 
 
 class AdminLoginApp:
@@ -451,4 +454,7 @@ class AdminLoginApp:
         raise NotImplementedError
 
     def open_admin_panel(self) -> None:
+        raise NotImplementedError
+
+    def tr(self, key: str, **kwargs) -> str:
         raise NotImplementedError

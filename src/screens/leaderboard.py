@@ -26,7 +26,7 @@ class LeaderboardScreen(Screen):
 
         tk.Label(
             panel,
-            text="Рекорды",
+            text=self.app.tr("leaderboard.title"),
             bg=self.app.theme.panel_bg,
             fg=self.app.theme.text_primary,
             font=("Arial", 32, "bold"),
@@ -34,7 +34,7 @@ class LeaderboardScreen(Screen):
 
         tk.Label(
             panel,
-            text="Топ результатов по количеству правильных ответов",
+            text=self.app.tr("leaderboard.subtitle"),
             bg=self.app.theme.panel_bg,
             fg=self.app.theme.text_secondary,
             font=("Arial", 13),
@@ -51,12 +51,12 @@ class LeaderboardScreen(Screen):
 
         headers = [
             ("rank", "#", 50),
-            ("player", "Игрок", 180),
-            ("difficulty", "Сложность", 120),
-            ("score", "Верных", 90),
-            ("asked", "Вопросов", 100),
-            ("win", "Победа", 90),
-            ("date", "Дата", 170),
+            ("player", self.app.tr("leaderboard.player"), 180),
+            ("difficulty", self.app.tr("leaderboard.difficulty"), 120),
+            ("score", self.app.tr("leaderboard.correct"), 90),
+            ("asked", self.app.tr("leaderboard.asked"), 100),
+            ("win", self.app.tr("leaderboard.win"), 90),
+            ("date", self.app.tr("leaderboard.date"), 170),
         ]
         for col, title, width in headers:
             self.tree.heading(col, text=title)
@@ -69,7 +69,7 @@ class LeaderboardScreen(Screen):
 
         GlassButton(
             bottom,
-            text="Обновить",
+            text=self.app.tr("leaderboard.refresh"),
             command=self.load_leaderboard,
             theme=self.app.theme,
             font=("Arial", 13, "bold"),
@@ -78,7 +78,7 @@ class LeaderboardScreen(Screen):
 
         GlassButton(
             bottom,
-            text="Назад в меню",
+            text=self.app.tr("leaderboard.back"),
             command=self.app.open_menu,
             theme=self.app.theme,
             font=("Arial", 13, "bold"),
@@ -123,10 +123,10 @@ class LeaderboardScreen(Screen):
         )
     def _difficulty_label(self, value: str) -> str:
         mapping = {
-            "easy": "Легкая",
-            "medium": "Нормальная",
-            "hard": "Сложная",
-            "mixed": "Смешанная",
+            "easy": self.app.tr("difficulty.easy"),
+            "medium": self.app.tr("difficulty.medium"),
+            "hard": self.app.tr("difficulty.hard"),
+            "mixed": self.app.tr("difficulty.mixed"),
         }
         return mapping.get(value.lower(), value)
 
@@ -140,7 +140,7 @@ class LeaderboardScreen(Screen):
             self.tree.insert(
                 "",
                 "end",
-                values=("-", "Нет данных", "-", "-", "-", "-", "-"),
+                values=("-", self.app.tr("leaderboard.empty"), "-", "-", "-", "-", "-"),
             )
             return
 
@@ -154,13 +154,16 @@ class LeaderboardScreen(Screen):
                     self._difficulty_label(item.difficulty),
                     item.score,
                     item.asked_questions,
-                    "Да" if item.is_win else "Нет",
+                    self.app.tr("yes") if item.is_win else self.app.tr("no"),
                     item.created_at,
                 ),
             )
 
     def on_escape(self) -> None:
         self.app.open_menu()
+
+    def on_language_changed(self) -> None:
+        self.app.open_leaderboard()
 
 
 class LeaderboardApp:
@@ -171,4 +174,7 @@ class LeaderboardApp:
         raise NotImplementedError
 
     def get_leaderboard(self, limit: int = 25) -> tuple[list[LeaderboardEntry], str]:
+        raise NotImplementedError
+
+    def tr(self, key: str, **kwargs) -> str:
         raise NotImplementedError

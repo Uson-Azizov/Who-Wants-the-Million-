@@ -1,0 +1,1008 @@
+{
+  "easy": [
+    {
+      "source_question": "Что в сигаретах вызывает зависимость?",
+      "question": "What is it about cigarettes that causes addiction?",
+      "options": [
+        "Resin",
+        "Carbon dioxide",
+        "Nicotine",
+        "Tobacco smoke"
+      ]
+    },
+    {
+      "source_question": "Сколько букв в немецком алфавите?",
+      "question": "How many letters are in the German alphabet?",
+      "options": [
+        "24",
+        "26",
+        "30",
+        "26 (+ ä, ö, ü, ß separately)"
+      ]
+    },
+    {
+      "source_question": "В каком году распался СССР?",
+      "question": "In what year did the USSR collapse?",
+      "options": [
+        "1989",
+        "1990",
+        "1991",
+        "1993"
+      ]
+    },
+    {
+      "source_question": "Кто автор произведения \"Война и мир\"?",
+      "question": "Who is the author of \"War and Peace\"?",
+      "options": [
+        "Dostoevsky",
+        "Turgenev",
+        "Tolstoy",
+        "Chekhov"
+      ]
+    },
+    {
+      "source_question": "Людей какой национальности больше всего в мире?",
+      "question": "What nationality are there the most people in the world?",
+      "options": [
+        "Indians",
+        "Americans",
+        "Chinese (Han)",
+        "Russians"
+      ]
+    },
+    {
+      "source_question": "Какого великого завоевателя называли коротким?",
+      "question": "Which great conqueror was called short?",
+      "options": [
+        "Alexander the Great",
+        "Napoleon Bonaparte",
+        "Genghis Khan",
+        "Julius Caesar"
+      ]
+    },
+    {
+      "source_question": "Какой из городов не является европейским?",
+      "question": "Which city is not European?",
+      "options": [
+        "Paris",
+        "Rome",
+        "Berlin",
+        "Tokyo"
+      ]
+    },
+    {
+      "source_question": "Какой язык программирования считается самым легким?",
+      "question": "What programming language is considered the easiest?",
+      "options": [
+        "C++",
+        "Java",
+        "Python",
+        "Assembly"
+      ]
+    },
+    {
+      "source_question": "Столица Украины?",
+      "question": "Capital of Ukraine?",
+      "options": [
+        "Lviv",
+        "Odessa",
+        "Kharkov",
+        "Kyiv"
+      ]
+    },
+    {
+      "source_question": "На каком континенте впервые узнали о картошке?",
+      "question": "On what continent did they first learn about potatoes?",
+      "options": [
+        "Europe",
+        "Asia",
+        "Africa",
+        "South America"
+      ]
+    },
+    {
+      "source_question": "Химическая формула воды?",
+      "question": "Chemical formula of water?",
+      "options": [
+        "CO₂",
+        "H₂O",
+        "O₂",
+        "H₂O₂"
+      ]
+    },
+    {
+      "source_question": "Какой раздел математики изучает свойства чисел?",
+      "question": "What branch of mathematics studies the properties of numbers?",
+      "options": [
+        "Geometry",
+        "Algebra",
+        "Number theory",
+        "Statistics"
+      ]
+    },
+    {
+      "source_question": "Какая из них не является дистрибутивом Linux?",
+      "question": "Which one is not a Linux distribution?",
+      "options": [
+        "Ubuntu",
+        "Fedora",
+        "Debian",
+        "Windows"
+      ]
+    },
+    {
+      "source_question": "Формула свободного падения (путь)?",
+      "question": "Free fall formula (path)?",
+      "options": [
+        "s = vt",
+        "s = at",
+        "s = gt²",
+        "s = (gt²)/2"
+      ]
+    },
+    {
+      "source_question": "Какой раздел IT занимается защитой данных?",
+      "question": "Which section of IT deals with data protection?",
+      "options": [
+        "Web development",
+        "Gamedev",
+        "Cybersecurity",
+        "Design"
+      ]
+    },
+    {
+      "source_question": "Какие виды спорта относятся к легкой атлетике?",
+      "question": "What sports are included in athletics?",
+      "options": [
+        "Boxing",
+        "Swimming",
+        "Running, jumping, throwing",
+        "Football"
+      ]
+    },
+    {
+      "source_question": "Чем не могут являться государственные символы стран?",
+      "question": "What cannot be state symbols of countries?",
+      "options": [
+        "Flag",
+        "Coat of arms",
+        "Hymn",
+        "Currency"
+      ]
+    },
+    {
+      "source_question": "Что будет если смешать синюю и красную краску?",
+      "question": "What happens if you mix blue and red paint?",
+      "options": [
+        "Green",
+        "Yellow",
+        "Violet",
+        "Brown"
+      ]
+    },
+    {
+      "source_question": "В каком году закончилась ВОВ?",
+      "question": "In what year did the Second World War end?",
+      "options": [
+        "1943",
+        "1944",
+        "1945",
+        "1946"
+      ]
+    },
+    {
+      "source_question": "В чем измеряется скорость в системе СИ?",
+      "question": "How is speed measured in the SI system?",
+      "options": [
+        "km/h",
+        "m/s",
+        "m",
+        "With"
+      ]
+    },
+    {
+      "source_question": "Длина экватора Земли?",
+      "question": "Length of the Earth's equator?",
+      "options": [
+        "~10,000 km",
+        "~20,000 km",
+        "~40,075 km",
+        "~50,000 km"
+      ]
+    },
+    {
+      "source_question": "Сколько законов Ньютона существует?",
+      "question": "How many Newton's laws are there?",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "source_question": "Валюта во Франции?",
+      "question": "Currency in France?",
+      "options": [
+        "Franc",
+        "Dollar",
+        "Euro",
+        "Lb"
+      ]
+    },
+    {
+      "source_question": "Сколько стран в СНГ?",
+      "question": "How many countries are there in the CIS?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    {
+      "source_question": "В каком году началась Первая мировая война?",
+      "question": "In what year did the First World War begin?",
+      "options": [
+        "1912",
+        "1913",
+        "1914",
+        "1915"
+      ]
+    },
+    {
+      "source_question": "Самый популярный спорт в мире?",
+      "question": "The most popular sport in the world?",
+      "options": [
+        "Basketball",
+        "Cricket",
+        "Football",
+        "Tennis"
+      ]
+    },
+    {
+      "source_question": "Сколько у людей хромосом?",
+      "question": "How many chromosomes do people have?",
+      "options": [
+        "44",
+        "45",
+        "46",
+        "48"
+      ]
+    },
+    {
+      "source_question": "Сумма углов треугольника?",
+      "question": "Sum of the angles of a triangle?",
+      "options": [
+        "90°",
+        "180°",
+        "270°",
+        "360°"
+      ]
+    },
+    {
+      "source_question": "Какая компания владеет напитком Sprite?",
+      "question": "Which company owns the drink Sprite?",
+      "options": [
+        "PepsiCo",
+        "Nestlé",
+        "Coca-Cola Company",
+        "Red Bull"
+      ]
+    },
+    {
+      "source_question": "Благодаря чему функционирует огнестрельное оружие?",
+      "question": "What makes a firearm work?",
+      "options": [
+        "Air pressure",
+        "Electricity",
+        "Friction force",
+        "Energy of powder gases"
+      ]
+    },
+    {
+      "source_question": "Когда основали ООН?",
+      "question": "When was the UN founded?",
+      "options": [
+        "1941",
+        "1943",
+        "1945",
+        "1947"
+      ]
+    },
+    {
+      "source_question": "Кем был Ленин?",
+      "question": "Who was Lenin?",
+      "options": [
+        "Writer",
+        "Scientist",
+        "Russian revolutionary and politician",
+        "General"
+      ]
+    },
+    {
+      "source_question": "Кто открыл Америку?",
+      "question": "Who discovered America?",
+      "options": [
+        "Magellan",
+        "Columbus",
+        "Vasco da Gama",
+        "Cook"
+      ]
+    },
+    {
+      "source_question": "Сколько планет в Солнечной системе?",
+      "question": "How many planets are there in the solar system?",
+      "options": [
+        "7",
+        "8",
+        "9",
+        "10"
+      ]
+    }
+  ],
+  "hard": [
+    {
+      "source_question": "Какой материк движется быстрее всех?",
+      "question": "Which continent is moving the fastest?",
+      "options": [
+        "Africa",
+        "Eurasia",
+        "Australia",
+        "Antarctica"
+      ]
+    },
+    {
+      "source_question": "Какое понятие ввёл Макс Вебер?",
+      "question": "What concept did Max Weber introduce?",
+      "options": [
+        "Social Darwinism",
+        "Charisma",
+        "Dialectics",
+        "Existence"
+      ]
+    },
+    {
+      "source_question": "Какой код использовался для шифрования сообщений в нацистской Германии?",
+      "question": "What code was used to encrypt messages in Nazi Germany?",
+      "options": [
+        "Caesar",
+        "Enigma",
+        "Lorenz",
+        "Vigenère"
+      ]
+    },
+    {
+      "source_question": "Какой орган НЕ относится к эндокринной системе?",
+      "question": "Which organ is NOT part of the endocrine system?",
+      "options": [
+        "Pituitary",
+        "Adrenal glands",
+        "Pancreas",
+        "Gallbladder"
+      ]
+    },
+    {
+      "source_question": "Какая звезда является ближайшей к Солнцу?",
+      "question": "Which star is closest to the Sun?",
+      "options": [
+        "Sirius",
+        "Alpha Centauri A",
+        "Proxima Centauri",
+        "Barnard's Star"
+      ]
+    },
+    {
+      "source_question": "Какой труд НЕ принадлежит Никколо Макиавелли?",
+      "question": "Which work is NOT by Niccolo Machiavelli?",
+      "options": [
+        "Sovereign",
+        "Discourses on the first decade of Titus Livy",
+        "Utopia",
+        "History of Florence"
+      ]
+    },
+    {
+      "source_question": "Что из перечисленного является квазичастицей?",
+      "question": "Which of the following is a quasiparticle?",
+      "options": [
+        "Photon",
+        "Magnon",
+        "Electron",
+        "Proton"
+      ]
+    },
+    {
+      "source_question": "Какая страна имеет наибольшее количество часовых поясов?",
+      "question": "Which country has the most time zones?",
+      "options": [
+        "USA",
+        "Russia",
+        "France",
+        "China"
+      ]
+    },
+    {
+      "source_question": "Что означает термин «анамнез»?",
+      "question": "What does the term \"history\" mean?",
+      "options": [
+        "Diagnosis",
+        "Medical history",
+        "Symptom",
+        "Treatment"
+      ]
+    },
+    {
+      "source_question": "Какой договор юридически завершил Первую мировую войну для Германии?",
+      "question": "Which treaty legally ended World War I for Germany?",
+      "options": [
+        "Saint Germain",
+        "Versailles",
+        "Trianonsky",
+        "Neuilly"
+      ]
+    },
+    {
+      "source_question": "Кто был реальным прототипом графа Дракулы?",
+      "question": "Who was the real prototype of Count Dracula?",
+      "options": [
+        "Vlad Tepes",
+        "Matthias Corwin",
+        "Stephen the Great",
+        "Yan Hunyadi"
+      ]
+    },
+    {
+      "source_question": "Какая часть мозга отвечает за проприоцепцию?",
+      "question": "Which part of the brain is responsible for proprioception?",
+      "options": [
+        "Hippocampus",
+        "Cerebellum",
+        "Thalamus",
+        "Amygdala"
+      ]
+    },
+    {
+      "source_question": "Какой из этих языков не имеет падежей?",
+      "question": "Which of these languages ​​does not have cases?",
+      "options": [
+        "Finnish",
+        "Latin",
+        "English",
+        "Estonian"
+      ]
+    },
+    {
+      "source_question": "Какое государство НЕ входит в G20?",
+      "question": "Which country is NOT in the G20?",
+      "options": [
+        "Argentina",
+        "Spain",
+        "Indonesia",
+        "Türkiye"
+      ]
+    },
+    {
+      "source_question": "Какой математический символ впервые ввёл Лейбниц?",
+      "question": "What mathematical symbol was first introduced by Leibniz?",
+      "options": [
+        null,
+        null,
+        "π",
+        null
+      ]
+    },
+    {
+      "source_question": "Кто ввёл термин «геноцид»?",
+      "question": "Who coined the term \"genocide\"?",
+      "options": [
+        "Rafael Lemkin",
+        "Hannah Arendt",
+        "Karl Jaspers",
+        "Elie Wiesel"
+      ]
+    },
+    {
+      "source_question": "Какой газ преобладает в атмосфере Марса?",
+      "question": "What gas predominates in the atmosphere of Mars?",
+      "options": [
+        "Nitrogen",
+        "Oxygen",
+        "Carbon dioxide",
+        "Methane"
+      ]
+    },
+    {
+      "source_question": "Какой город называют «городом семи холмов», кроме Рима?",
+      "question": "What city is called the \"city of seven hills\" besides Rome?",
+      "options": [
+        "Paris",
+        "Moscow",
+        "Constantinople",
+        "Athens"
+      ]
+    },
+    {
+      "source_question": "Что измеряет шкала Апгар?",
+      "question": "What does the Apgar score measure?",
+      "options": [
+        "Intelligence",
+        "Pulse",
+        "Condition of the newborn",
+        "Pressure"
+      ]
+    },
+    {
+      "source_question": "Какая из этих дат НЕ связана с холодной войной?",
+      "question": "Which of these dates is NOT related to the Cold War?",
+      "options": [
+        "1947",
+        "1956",
+        "1962",
+        "1979"
+      ]
+    },
+    {
+      "source_question": "Какой материал использовался как замедлитель в первых ядерных реакторах?",
+      "question": "What material was used as a moderator in the first nuclear reactors?",
+      "options": [
+        "Graphite",
+        "Water",
+        "Beryllium",
+        "Cadmium"
+      ]
+    },
+    {
+      "source_question": "Что означает латинское выражение «sub rosa»?",
+      "question": "What does the Latin expression \"sub rosa\" mean?",
+      "options": [
+        "Under threat",
+        "In secret",
+        "In law",
+        "Over"
+      ]
+    },
+    {
+      "source_question": "Какое море не имеет береговой линии?",
+      "question": "Which sea does not have a coastline?",
+      "options": [
+        "Sargasso",
+        "Black",
+        "Caspian",
+        "Red"
+      ]
+    },
+    {
+      "source_question": "Какой из этих писателей НЕ получал Нобелевскую премию?",
+      "question": "Which of these writers did NOT receive the Nobel Prize?",
+      "options": [
+        "Albert Camus",
+        "Boris Pasternak",
+        "James Joyce",
+        "Ernest Hemingway"
+      ]
+    },
+    {
+      "source_question": "Что НЕ является постулатом специальной теории относительности?",
+      "question": "What is NOT a postulate of the special theory of relativity?",
+      "options": [
+        "Constancy of the speed of light",
+        "Relativity of time",
+        "Equivalence of mass and energy",
+        "Absence of an absolute frame of reference"
+      ]
+    },
+    {
+      "source_question": "Какое государство первым признало СССР?",
+      "question": "Which state was the first to recognize the USSR?",
+      "options": [
+        "Germany",
+        "Türkiye",
+        "Afghanistan",
+        "United Kingdom"
+      ]
+    },
+    {
+      "source_question": "Какой орган человека вырабатывает эритропоэтин?",
+      "question": "Which human organ produces erythropoietin?",
+      "options": [
+        "Liver",
+        "Kidneys",
+        "Spleen",
+        "Bone marrow"
+      ]
+    },
+    {
+      "source_question": "Какая война длилась дольше всего официально?",
+      "question": "Which war lasted the longest officially?",
+      "options": [
+        "Centennial",
+        "Punic Wars",
+        "Thirty years old",
+        "War with the Netherlands (Scilly)"
+      ]
+    },
+    {
+      "source_question": "Какой философ ввёл понятие «ноумен»?",
+      "question": "Which philosopher introduced the concept of “noumenon”?",
+      "options": [
+        "Plato",
+        "Aristotle",
+        "Immanuel Kant",
+        "Georg Hegel"
+      ]
+    },
+    {
+      "source_question": "Какой элемент имеет наибольшее атомное число среди стабильных?",
+      "question": "Which element has the highest atomic number among the stable ones?",
+      "options": [
+        "Lead",
+        "Bismuth",
+        "Uranus",
+        "Thorium"
+      ]
+    },
+    {
+      "source_question": "Какой город никогда не был столицей Римской империи?",
+      "question": "Which city was never the capital of the Roman Empire?",
+      "options": [
+        "Ravenna",
+        "Milan",
+        "Nicomedia",
+        "Athens"
+      ]
+    },
+    {
+      "source_question": "Какой принцип лежит в основе обнаружения гравитационных волн?",
+      "question": "What principle underlies the detection of gravitational waves?",
+      "options": [
+        "Interference of light",
+        "Curvature of space-time",
+        "Quantum entanglement",
+        "Doppler effect"
+      ]
+    },
+    {
+      "source_question": "Какой из этих языков НЕ относится к индоевропейской языковой семье?",
+      "question": "Which of these languages ​​does NOT belong to the Indo-European language family?",
+      "options": [
+        "Armenian",
+        "Albanian",
+        "Hungarian",
+        "Persian"
+      ]
+    }
+  ],
+  "meduim": [
+    {
+      "source_question": "Сколько стран входит в ООН?",
+      "question": "How many countries are in the UN?",
+      "options": [
+        "190",
+        "192",
+        "193",
+        "195"
+      ]
+    },
+    {
+      "source_question": "Столица Камбоджи?",
+      "question": "Capital of Cambodia?",
+      "options": [
+        "Bangkok",
+        "Phnom Penh",
+        "Hanoi",
+        "Vientiane"
+      ]
+    },
+    {
+      "source_question": "Родина пороха?",
+      "question": "The birthplace of gunpowder?",
+      "options": [
+        "India",
+        "China",
+        "Egypt",
+        "Greece"
+      ]
+    },
+    {
+      "source_question": "Первый президент США?",
+      "question": "First US President?",
+      "options": [
+        "Abraham Lincoln",
+        "Thomas Jefferson",
+        "George Washington",
+        "John Adams"
+      ]
+    },
+    {
+      "source_question": "Кому принадлежит фраза «То, что не убивает нас, делает нас сильнее»?",
+      "question": "Who owns the phrase “What doesn't kill us makes us stronger”?",
+      "options": [
+        "Shakespeare",
+        "Darwin",
+        "Nietzsche",
+        "Freud"
+      ]
+    },
+    {
+      "source_question": "Сколько длилась Столетняя война?",
+      "question": "How long did the Hundred Years' War last?",
+      "options": [
+        "100 years",
+        "87 years old",
+        "116 years",
+        "120 years"
+      ]
+    },
+    {
+      "source_question": "Кто открыл теорию относительности времени?",
+      "question": "Who discovered the theory of relativity of time?",
+      "options": [
+        "Newton",
+        "Galileo",
+        "Einstein",
+        "Maxwell"
+      ]
+    },
+    {
+      "source_question": "Длина Бурдж-Халифа?",
+      "question": "How long is Burj Khalifa?",
+      "options": [
+        "728 m",
+        "800 m",
+        "828 m",
+        "900 m"
+      ]
+    },
+    {
+      "source_question": "Благодаря чему растения питаются энергией солнца?",
+      "question": "How do plants feed on the energy of the sun?",
+      "options": [
+        "Breath",
+        "Evaporation",
+        "Photosynthesis",
+        "Pollination"
+      ]
+    },
+    {
+      "source_question": "Формула поваренной соли?",
+      "question": "Table salt formula?",
+      "options": [
+        "HCl",
+        "NaCl",
+        "CaCO3",
+        "NaOH"
+      ]
+    },
+    {
+      "source_question": "Первый президент России?",
+      "question": "The first president of Russia?",
+      "options": [
+        "Gorbachev",
+        "Putin",
+        "Medvedev",
+        "Yeltsin"
+      ]
+    },
+    {
+      "source_question": "В какой стране больше всего самоубийств на душу населения?",
+      "question": "Which country has the most suicides per capita?",
+      "options": [
+        "India",
+        "USA",
+        "Lithuania",
+        "Japan"
+      ]
+    },
+    {
+      "source_question": "За что в Python отвечает функция .pop()?",
+      "question": "What does the .pop() function do in Python?",
+      "options": [
+        "Adds an element",
+        "Sorts a list",
+        "Removes and returns an element",
+        "Copies the list"
+      ]
+    },
+    {
+      "source_question": "Кто написал картину «Звёздная ночь»?",
+      "question": "Who painted the painting \"Starry Night\"?",
+      "options": [
+        "Monet",
+        "Picasso",
+        "Van Gogh",
+        "Dali"
+      ]
+    },
+    {
+      "source_question": "Что означает слово «реноме»?",
+      "question": "What does the word \"renome\" mean?",
+      "options": [
+        "Secret",
+        "Reputation",
+        "Hope",
+        "Risk"
+      ]
+    },
+    {
+      "source_question": "Какой инструмент является основным в симфоническом оркестре?",
+      "question": "What is the main instrument in a symphony orchestra?",
+      "options": [
+        "Saxophone",
+        "Flute",
+        "Drums",
+        "Violin"
+      ]
+    },
+    {
+      "source_question": "Какая страна НЕ имеет выхода к морю?",
+      "question": "Which country is NOT landlocked?",
+      "options": [
+        "Portugal",
+        "Austria",
+        "Greece",
+        "Italy"
+      ]
+    },
+    {
+      "source_question": "Какой город называют «Северной столицей» России?",
+      "question": "Which city is called the “Northern capital” of Russia?",
+      "options": [
+        "Moscow",
+        "Novosibirsk",
+        "Saint Petersburg",
+        "Kazan"
+      ]
+    },
+    {
+      "source_question": "Кто был первым космонавтом в истории человечества?",
+      "question": "Who was the first astronaut in human history?",
+      "options": [
+        "Armstrong",
+        "Gagarin",
+        "Titov",
+        "Leonov"
+      ]
+    },
+    {
+      "source_question": "Как называется наука о грибах?",
+      "question": "What is the science of mushrooms called?",
+      "options": [
+        "Botany",
+        "Mycology",
+        "Zoology",
+        "Ecology"
+      ]
+    },
+    {
+      "source_question": "Какое море является самым солёным?",
+      "question": "Which sea is the saltiest?",
+      "options": [
+        "Red",
+        "Mediterranean",
+        "Dead",
+        "Black"
+      ]
+    },
+    {
+      "source_question": "В каком виде спорта разыгрывается Кубок Дэвиса?",
+      "question": "What sport is the Davis Cup played in?",
+      "options": [
+        "Football",
+        "Hockey",
+        "Tennis",
+        "Basketball"
+      ]
+    },
+    {
+      "source_question": "Когда появилась первая ядерная бомба?",
+      "question": "When did the first nuclear bomb appear?",
+      "options": [
+        "1939",
+        "1943",
+        "1945",
+        "1947"
+      ]
+    },
+    {
+      "source_question": "Самая известная картина в мире?",
+      "question": "The most famous painting in the world?",
+      "options": [
+        "Starry night",
+        "last supper",
+        "Mona Lisa",
+        "Scream"
+      ]
+    },
+    {
+      "source_question": "Кто написал произведение «Идиот»?",
+      "question": "Who wrote the work \"The Idiot\"?",
+      "options": [
+        "Tolstoy",
+        "Turgenev",
+        "Chekhov",
+        "Dostoevsky"
+      ]
+    },
+    {
+      "source_question": "Какой металл является основным компонентом бронзы?",
+      "question": "What metal is the main component of bronze?",
+      "options": [
+        "Iron",
+        "Aluminum",
+        "Copper",
+        "Tin"
+      ]
+    },
+    {
+      "source_question": "Какие семь смертных грехов есть в Библии?",
+      "question": "What are the seven deadly sins in the Bible?",
+      "options": [
+        "Faith, hope, love",
+        "Anger, pride, envy, lust, gluttony, greed, despondency",
+        "Fear, pain, joy",
+        "Laziness, sleep, hunger"
+      ]
+    },
+    {
+      "source_question": "Какой термин относится к экономике?",
+      "question": "What term refers to economics?",
+      "options": [
+        "Pulse",
+        "Inflation",
+        "Catalyst",
+        "Orbit"
+      ]
+    },
+    {
+      "source_question": "Как называется устройство для измерения атмосферного давления?",
+      "question": "What is the name of the device for measuring atmospheric pressure?",
+      "options": [
+        "Thermometer",
+        "Pressure gauge",
+        "Barometer",
+        "Hygrometer"
+      ]
+    },
+    {
+      "source_question": "Как называется государственный гимн Франции?",
+      "question": "What is the name of the French national anthem?",
+      "options": [
+        "Marseillaise",
+        "International",
+        "Requiem",
+        "Ode to Joy"
+      ]
+    },
+    {
+      "source_question": "Какой язык является официальным в Бразилии?",
+      "question": "What is the official language in Brazil?",
+      "options": [
+        "Spanish",
+        "English",
+        "French",
+        "Portuguese"
+      ]
+    },
+    {
+      "source_question": "Какой материк самый маленький по площади?",
+      "question": "Which continent is the smallest in area?",
+      "options": [
+        "Europe",
+        "Antarctica",
+        "Australia",
+        "South America"
+      ]
+    },
+    {
+      "source_question": "Как называется процесс превращения воды в пар?",
+      "question": "What is the process of turning water into steam called?",
+      "options": [
+        "Condensation",
+        "Crystallization",
+        "Evaporation",
+        "Sublimation"
+      ]
+    }
+  ]
+}

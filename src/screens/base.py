@@ -25,6 +25,9 @@ class Screen:
     def on_destroy(self) -> None:
         return
 
+    def on_language_changed(self) -> None:
+        return
+
 
 class AppProtocol:
     root: tk.Tk

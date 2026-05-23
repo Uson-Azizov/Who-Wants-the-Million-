@@ -5,22 +5,33 @@ import json
 import tkinter as tk
 from datetime import datetime
 
+from src.audio import AudioManager
 from src.config import (
     ADMIN_DEFAULT_CODE,
     ADMIN_DEFAULT_LOGIN,
     DATABASE_BACKEND,
     DATABASE_CONNECT_TIMEOUT,
     DATABASE_URL,
+    DEFAULT_LANGUAGE,
     EXPORTS_DIR,
+    MENU_MUSIC_PATH,
     PLAYER_NAME,
+    QUESTION_MUSIC_PATH,
+    QUESTIONS_DIR,
     QUESTIONS_FILES,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     SQLITE_DATABASE_PATH,
+    SFX_CLICK_PATH,
+    SFX_CORRECT_PATH,
+    SFX_LIFELINE_PATH,
+    SFX_WIN_PATH,
+    SFX_WRONG_PATH,
     START_FULLSCREEN,
     TITLE,
 )
 from src.database import DatabaseClient
+from src.i18n import I18n, SUPPORTED_LANGUAGES
 from src.models import Difficulty
 from src.repository import QuestionRepository
 from src.screens.base import Screen
@@ -41,6 +52,8 @@ class MillionaireGameApp:
 
         self.theme = Theme()
         self.root.configure(bg=self.theme.window_bg)
+        self.i18n = I18n(QUESTIONS_DIR / "i18n")
+        self.language = DEFAULT_LANGUAGE if DEFAULT_LANGUAGE in SUPPORTED_LANGUAGES else "ru"
 
         self.width = SCREEN_WIDTH
         self.height = SCREEN_HEIGHT
@@ -52,7 +65,7 @@ class MillionaireGameApp:
         else:
             self._apply_windowed_mode()
 
-        self.status_text_var = tk.StringVar(value="Главное меню")
+        self.status_text_var = tk.StringVar(value=self.tr("status.menu"))
         self.player_name = PLAYER_NAME
         self.database = DatabaseClient(
             DATABASE_URL,
@@ -70,15 +83,16 @@ class MillionaireGameApp:
 
         repository = QuestionRepository(QUESTIONS_FILES)
         file_questions = repository.load_all()
-        self.questions = file_questions
+        self.base_questions = file_questions
         if db_health.connected:
             summary, _ = self.database.get_questions_summary()
             if summary is None or summary.total == 0:
                 self.database.replace_questions(file_questions)
             db_questions, db_message = self.database.get_game_questions()
             if db_questions is not None and any(db_questions.values()):
-                self.questions = db_questions
+                self.base_questions = db_questions
                 self.db_status_var.set(db_message)
+        self.questions = self.i18n.localize_questions(self.base_questions, self.language)
         self.game_service = GameService(self.questions)
 
         self.current_screen: Screen | None = None
@@ -143,23 +157,23 @@ class MillionaireGameApp:
         self.root.geometry(f"{width}x{height}+{pos_x}+{pos_y}")
 
     def open_menu(self) -> None:
-        self.status_text_var.set("Главное меню")
+        self.status_text_var.set(self.tr("status.menu"))
         self._switch_screen(MenuScreen(self))
 
     def open_leaderboard(self) -> None:
-        self.status_text_var.set("Рекорды")
+        self.status_text_var.set(self.tr("status.leaderboard"))
         self._switch_screen(LeaderboardScreen(self))
 
     def open_settings(self) -> None:
-        self.status_text_var.set("Настройки")
+        self.status_text_var.set(self.tr("status.settings"))
         self._switch_screen(SettingsScreen(self))
 
     def open_admin_login(self) -> None:
-        self.status_text_var.set("Вход в админку")
+        self.status_text_var.set(self.tr("status.admin_login"))
         self._switch_screen(AdminLoginScreen(self))
 
     def open_admin_panel(self) -> None:
-        self.status_text_var.set("Админка")
+        self.status_text_var.set(self.tr("status.admin_panel"))
         self._switch_screen(AdminPanelScreen(self))
 
     def start_game(self, difficulty: Difficulty | None = None) -> None:
@@ -170,7 +184,7 @@ class MillionaireGameApp:
             return
 
         self.game_service.reset()
-        self.status_text_var.set("Игра запущена")
+        self.status_text_var.set(self.tr("status.game_started"))
         self._switch_screen(GameScreen(self))
 
     def quit(self) -> None:
@@ -205,7 +219,7 @@ class MillionaireGameApp:
             self.db_status_var.set(message)
 
     def sync_questions_to_database(self) -> str:
-        summary, message = self.database.replace_questions(self.questions)
+        summary, message = self.database.replace_questions(self.base_questions)
         self.db_status_var.set(message)
         self.status_text_var.set(message if summary is not None else "Импорт вопросов не выполнен")
         return message
@@ -233,11 +247,32 @@ class MillionaireGameApp:
         if success:
             db_questions, _ = self.database.get_game_questions()
             if db_questions is not None:
-                self.questions = db_questions
-                self.game_service.questions = db_questions
+                self.base_questions = db_questions
+                self._refresh_localized_questions()
         self.db_status_var.set(message)
         self.status_text_var.set(message)
         return success, message
+
+    def tr(self, message_key: str, **kwargs) -> str:
+        return self.i18n.tr(self.language, message_key, **kwargs)
+
+    def set_language(self, language: str) -> None:
+        normalized = language.strip().lower()
+        if normalized not in SUPPORTED_LANGUAGES:
+            return
+        if normalized == self.language:
+            return
+        self.language = normalized
+        self._refresh_localized_questions()
+        self.status_text_var.set(
+            self.tr("status.language_switched", language=self.i18n.language_name(normalized))
+        )
+        if self.current_screen is not None:
+            self.current_screen.on_language_changed()
+
+    def _refresh_localized_questions(self) -> None:
+        self.questions = self.i18n.localize_questions(self.base_questions, self.language)
+        self.game_service.questions = self.questions
 
     def export_game_data(self, format_name: str) -> tuple[bool, str]:
         payload, message = self.database.get_export_payload()

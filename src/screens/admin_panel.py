@@ -48,7 +48,7 @@ class AdminPanelScreen(Screen):
         self.menu_hovered = False
 
         self.message_var = tk.StringVar(value="")
-        self.details_var = tk.StringVar(value="Выберите вопрос слева, чтобы увидеть правильный ответ и варианты.")
+        self.details_var = tk.StringVar(value=self.app.tr("admin.panel.pick_left"))
         self.difficulty_var = tk.StringVar(value="easy")
         self.correct_var = tk.StringVar(value="A")
         self.option_vars = {key: tk.StringVar() for key in ("A", "B", "C", "D")}
@@ -69,15 +69,15 @@ class AdminPanelScreen(Screen):
         )
         self.scrollbar = ttk.Scrollbar(self.left_panel, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.scrollbar.set)
-        self.tree.heading("difficulty", text="Level")
-        self.tree.heading("question", text="Question")
-        self.tree.heading("answer", text="Correct")
+        self.tree.heading("difficulty", text=self.app.tr("admin.panel.level"))
+        self.tree.heading("question", text=self.app.tr("admin.panel.question"))
+        self.tree.heading("answer", text=self.app.tr("admin.panel.correct"))
         self.tree.bind("<<TreeviewSelect>>", self._on_tree_select)
 
-        self.left_title = tk.Label(self.left_panel, text="Question Bank", bg=PANEL_COLOR, fg=TEXT_PRIMARY)
+        self.left_title = tk.Label(self.left_panel, text=self.app.tr("admin.panel.title"), bg=PANEL_COLOR, fg=TEXT_PRIMARY)
         self.left_subtitle = tk.Label(
             self.left_panel,
-            text="All questions with answers from your SQL database",
+            text=self.app.tr("admin.panel.subtitle"),
             bg=PANEL_COLOR,
             fg=TEXT_MUTED,
             anchor="w",
@@ -92,10 +92,10 @@ class AdminPanelScreen(Screen):
             justify="left",
         )
 
-        self.right_title = tk.Label(self.right_panel, text="Add Question", bg=PANEL_COLOR, fg=TEXT_PRIMARY)
+        self.right_title = tk.Label(self.right_panel, text=self.app.tr("admin.panel.add_title"), bg=PANEL_COLOR, fg=TEXT_PRIMARY)
         self.right_subtitle = tk.Label(
             self.right_panel,
-            text="Create a new question for the game right from admin mode",
+            text=self.app.tr("admin.panel.add_subtitle"),
             bg=PANEL_COLOR,
             fg=TEXT_MUTED,
             anchor="w",
@@ -281,7 +281,7 @@ class AdminPanelScreen(Screen):
         self.canvas.create_text(
             (x1 + x2) / 2,
             (y1 + y2) / 2,
-            text="Menu",
+            text=self.app.tr("common.menu"),
             fill=TEXT_PRIMARY,
             font=self._font(50, "bold"),
             tags="bg",
@@ -383,7 +383,7 @@ class AdminPanelScreen(Screen):
         row = 0
         self.form_frame.grid_columnconfigure(0, weight=1)
 
-        tk.Label(self.form_frame, text="Difficulty", bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=row, column=0, sticky="w", pady=(0, 6))
+        tk.Label(self.form_frame, text=self.app.tr("admin.panel.level"), bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=row, column=0, sticky="w", pady=(0, 6))
         row += 1
         difficulty_menu = ttk.Combobox(
             self.form_frame,
@@ -395,7 +395,7 @@ class AdminPanelScreen(Screen):
         difficulty_menu.grid(row=row, column=0, sticky="ew", pady=(0, 16))
         row += 1
 
-        tk.Label(self.form_frame, text="Question", bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=row, column=0, sticky="w", pady=(0, 6))
+        tk.Label(self.form_frame, text=self.app.tr("admin.panel.question"), bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=row, column=0, sticky="w", pady=(0, 6))
         row += 1
         self.question_text = tk.Text(
             self.form_frame,
@@ -415,7 +415,7 @@ class AdminPanelScreen(Screen):
 
         self.question_entries = []
         for key in ("A", "B", "C", "D"):
-            tk.Label(self.form_frame, text=f"Option {key}", bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=row, column=0, sticky="w", pady=(0, 6))
+            tk.Label(self.form_frame, text=self.app.tr("admin.panel.option", key=key), bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=row, column=0, sticky="w", pady=(0, 6))
             row += 1
             entry = tk.Entry(
                 self.form_frame,
@@ -434,7 +434,7 @@ class AdminPanelScreen(Screen):
         footer = tk.Frame(self.form_frame, bg=PANEL_COLOR, bd=0, highlightthickness=0)
         footer.grid(row=row, column=0, sticky="ew", pady=(8, 0))
         footer.grid_columnconfigure(1, weight=1)
-        tk.Label(footer, text="Correct answer", bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=0, column=0, sticky="w", padx=(0, 12))
+        tk.Label(footer, text=self.app.tr("admin.panel.correct_answer"), bg=PANEL_COLOR, fg=TEXT_MUTED, font=label_font).grid(row=0, column=0, sticky="w", padx=(0, 12))
         correct_menu = ttk.Combobox(
             footer,
             textvariable=self.correct_var,
@@ -448,7 +448,7 @@ class AdminPanelScreen(Screen):
 
         add_button = tk.Button(
             self.form_frame,
-            text="Add Question",
+            text=self.app.tr("admin.panel.add"),
             command=self._add_question,
             relief="flat",
             bd=0,
@@ -500,8 +500,8 @@ class AdminPanelScreen(Screen):
             correct_answer = options[entry.correct_index] if 0 <= entry.correct_index < 4 else ""
             item_id = self.tree.insert("", "end", values=(entry.difficulty, entry.question_text, correct_answer))
             self._entries_by_item[item_id] = entry
-        self.message_var.set(f"Loaded {len(entries)} questions")
-        self.details_var.set("Выберите вопрос слева, чтобы увидеть варианты A/B/C/D и правильный ответ.")
+        self.message_var.set(self.app.tr("admin.panel.loaded", count=len(entries)))
+        self.details_var.set(self.app.tr("admin.panel.pick_details"))
 
     def _on_tree_select(self, _event: tk.Event) -> None:
         selected = self.tree.selection()
@@ -520,7 +520,7 @@ class AdminPanelScreen(Screen):
         self.details_var.set(
             f"{entry.question_text}\n\n"
             + "\n".join(options)
-            + f"\n\nCorrect answer: {correct_key}"
+            + f"\n\n{self.app.tr('admin.panel.correct_details', key=correct_key)}"
         )
 
     def _add_question(self) -> None:
@@ -558,6 +558,9 @@ class AdminPanelScreen(Screen):
     def on_escape(self) -> None:
         self.app.open_settings()
 
+    def on_language_changed(self) -> None:
+        self.app.open_admin_panel()
+
 
 class AdminPanelApp:
     width: int
@@ -577,4 +580,7 @@ class AdminPanelApp:
         options: list[str],
         correct_index: int,
     ) -> tuple[bool, str]:
+        raise NotImplementedError
+
+    def tr(self, key: str, **kwargs) -> str:
         raise NotImplementedError

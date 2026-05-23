@@ -72,6 +72,40 @@ class MenuScreen(Screen):
 
         self.on_resize(self.app.width, self.app.height)
 
+    def _draw_language_overlays(self) -> None:
+        self.canvas.delete("lang")
+        if self.app.language == "ru":
+            return
+        for region in self.button_regions:
+            x1, y1, x2, y2 = region.bounds
+            inset_x = max(12, (x2 - x1) * 0.06)
+            inset_y = max(10, (y2 - y1) * 0.1)
+            self.canvas.create_rectangle(
+                x1 + inset_x,
+                y1 + inset_y,
+                x2 - inset_x,
+                y2 - inset_y,
+                fill="#0A083D",
+                outline="",
+                tags="lang",
+            )
+            key = {
+                "Играть": "menu.play",
+                "Настройки": "menu.settings",
+                "Статистика": "menu.stats",
+                "Выход": "menu.exit",
+            }.get(region.text)
+            text = self.app.tr(key) if key is not None else region.text
+            self.canvas.create_text(
+                (x1 + x2) / 2,
+                (y1 + y2) / 2,
+                text=text,
+                fill="#62BDD0",
+                font=("Arial", max(18, int((y2 - y1) * 0.44)), "bold"),
+                anchor="center",
+                tags="lang",
+            )
+
     def _load_layout_source(self):
         if not MENU_LAYOUT_IMAGE_PATH.exists():
             return None
@@ -162,12 +196,17 @@ class MenuScreen(Screen):
 
         self.canvas.itemconfigure(self.layout_id, image=self.layout_image, state="normal")
         self.canvas.coords(self.layout_id, left, top)
+        self._draw_language_overlays()
         self._set_cursor("arrow")
+
+    def on_language_changed(self) -> None:
+        self.on_resize(self.app.width, self.app.height)
 
 
 class MenuApp:
     width: int
     height: int
+    language: str
     status_text_var: tk.StringVar
 
     def start_game(self) -> None:
@@ -180,4 +219,7 @@ class MenuApp:
         raise NotImplementedError
 
     def quit(self) -> None:
+        raise NotImplementedError
+
+    def tr(self, key: str, **kwargs) -> str:
         raise NotImplementedError

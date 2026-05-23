@@ -96,6 +96,7 @@ class GameScreen(Screen):
         self.lifeline_armed = {"phoenix": False, "2x": False}
         self.lifeline_canvases: dict[str, tk.Canvas] = {}
         self.lifeline_images: dict[str, ImageTk.PhotoImage | None] = {}
+        self.leave_dialog: tk.Toplevel | None = None
         self._lifeline_icon_sources = {
             "phoenix": self._load_icon_source(LIFELINE_PHOENIX_PATH, white_to_alpha=True),
             "5050": self._load_icon_source(LIFELINE_5050_PATH, white_to_alpha=False),
@@ -150,8 +151,8 @@ class GameScreen(Screen):
     def _build_stage(self) -> None:
         self.menu_btn = GlassButton(
             self.stage_frame,
-            text="Меню",
-            command=self.app.open_menu,
+            text=self.app.tr("common.menu"),
+            command=self._request_leave_game,
             theme=self.app.theme,
             font=("Arial", 18, "bold"),
             width=10,
@@ -167,7 +168,7 @@ class GameScreen(Screen):
 
         self.progress_btn = GlassButton(
             self.stage_frame,
-            text="Раунд 1/15",
+            text=self.app.tr("game.round", current=1, total=len(PRIZE_LEVELS)),
             command=lambda: None,
             theme=self.app.theme,
             font=("Arial", 20, "bold"),
@@ -184,7 +185,7 @@ class GameScreen(Screen):
 
         self.amount_btn = GlassButton(
             self.stage_frame,
-            text="500сом",
+            text=self._format_amount(PRIZE_LEVELS[0][0]),
             command=lambda: None,
             theme=self.app.theme,
             font=("Arial", 20, "bold"),
@@ -208,7 +209,7 @@ class GameScreen(Screen):
         )
         self.question_prefix_label = tk.Label(
             self.question_wrap,
-            text="Вопрос:",
+            text=self.app.tr("game.question"),
             bg=CARD_BG,
             fg=ACCENT_CYAN,
             anchor="w",
@@ -347,32 +348,32 @@ class GameScreen(Screen):
 
         if name == "5050":
             if self.lifeline_used["5050"]:
-                self.feedback_label.configure(text="50/50 уже использован")
+                self.feedback_label.configure(text=self.app.tr("game.lifeline.used_5050"))
                 return
             self.lifeline_used["5050"] = True
             self._apply_fifty_fifty()
-            self.feedback_label.configure(text="50/50: убраны два неверных варианта")
+            self.feedback_label.configure(text=self.app.tr("game.lifeline.applied_5050"))
             self._draw_lifeline("5050")
             return
 
         if name == "2x":
             if self.lifeline_used["2x"]:
-                self.feedback_label.configure(text="2X уже использован")
+                self.feedback_label.configure(text=self.app.tr("game.lifeline.used_2x"))
                 return
             self.lifeline_used["2x"] = True
             self.lifeline_armed["2x"] = True
-            self.feedback_label.configure(text="2X активирован: при верном ответе переход на +2 уровня")
+            self.feedback_label.configure(text=self.app.tr("game.lifeline.applied_2x"))
             self._draw_lifeline("2x")
             return
 
         if self.lifeline_used["phoenix"]:
-            self.feedback_label.configure(text="Феникс уже использован")
+            self.feedback_label.configure(text=self.app.tr("game.lifeline.used_phoenix"))
             return
         if self.lifeline_armed["phoenix"]:
-            self.feedback_label.configure(text="Феникс уже активирован")
+            self.feedback_label.configure(text=self.app.tr("game.lifeline.active_phoenix"))
             return
         self.lifeline_armed["phoenix"] = True
-        self.feedback_label.configure(text="Феникс активирован: одна ошибка будет прощена")
+        self.feedback_label.configure(text=self.app.tr("game.lifeline.applied_phoenix"))
         self._draw_lifeline("phoenix")
 
     def _apply_fifty_fifty(self) -> None:
@@ -415,12 +416,12 @@ class GameScreen(Screen):
         self.question_label.configure(text=body)
 
     def _format_amount(self, value: int) -> str:
-        return f"{value:,}".replace(",", " ") + "сом"
+        return f"{value:,}".replace(",", " ") + self.app.tr("game.currency_suffix")
 
     def _update_header_progress(self) -> None:
         current_step = min(self.level_index + 1, len(PRIZE_LEVELS))
         total_steps = len(PRIZE_LEVELS)
-        self.progress_btn.configure(text=f"Раунд {current_step}/{total_steps}")
+        self.progress_btn.configure(text=self.app.tr("game.round", current=current_step, total=total_steps))
         target_amount = PRIZE_LEVELS[min(self.level_index, len(PRIZE_LEVELS) - 1)][0]
         self.amount_btn.configure(text=self._format_amount(target_amount))
 
@@ -481,12 +482,12 @@ class GameScreen(Screen):
         _, difficulty = PRIZE_LEVELS[self.level_index]
         self.current_question = self.app.game_service.get_next_question(difficulty)
         if self.current_question is None:
-            self._set_question_text("Ошибка:", f"Недостаточно вопросов ({difficulty.value})")
-            self.feedback_label.configure(text="Возврат в меню...")
+            self._set_question_text(self.app.tr("game.error_title"), self.app.tr("game.error_questions", difficulty=difficulty.value))
+            self.feedback_label.configure(text=self.app.tr("game.returning_menu"))
             self._schedule_after(1200, self.app.open_menu)
             return
 
-        self._set_question_text("Вопрос:", self.current_question.text)
+        self._set_question_text(self.app.tr("game.question"), self.current_question.text)
         self.feedback_label.configure(text="")
 
         for index, button in self.answer_buttons.items():
@@ -499,9 +500,9 @@ class GameScreen(Screen):
 
     def _finish_game_win(self) -> None:
         top_amount = PRIZE_LEVELS[-1][0]
-        self._set_question_text("Итог:", f"Поздравляем! Вы дошли до {self._format_amount(top_amount)}")
-        self.feedback_label.configure(text="Игра завершена")
-        self.progress_btn.configure(text=f"Раунд {len(PRIZE_LEVELS)}/{len(PRIZE_LEVELS)}")
+        self._set_question_text(self.app.tr("game.finish_title"), self.app.tr("game.finish_text", amount=self._format_amount(top_amount)))
+        self.feedback_label.configure(text=self.app.tr("game.finish"))
+        self.progress_btn.configure(text=self.app.tr("game.round", current=len(PRIZE_LEVELS), total=len(PRIZE_LEVELS)))
         self.amount_btn.configure(text=self._format_amount(top_amount))
 
         if not self.result_saved:
@@ -523,9 +524,9 @@ class GameScreen(Screen):
             if self.lifeline_armed["2x"]:
                 self.lifeline_armed["2x"] = False
                 self._draw_lifeline("2x")
-                self.feedback_label.configure(text="Верно! 2X активен: переход на +2 уровня")
+                self.feedback_label.configure(text=self.app.tr("game.correct_2x"))
             else:
-                self.feedback_label.configure(text="Верно!")
+                self.feedback_label.configure(text=self.app.tr("game.correct"))
             if self.lifeline_armed["phoenix"] and not self.lifeline_used["phoenix"]:
                 self.lifeline_armed["phoenix"] = False
                 self._draw_lifeline("phoenix")
@@ -540,16 +541,120 @@ class GameScreen(Screen):
             self.lifeline_used["phoenix"] = True
             self.app.game_service.session.completed = False
             self._draw_lifeline("phoenix")
-            self.feedback_label.configure(text="Феникс спасает вас. Новый вопрос того же уровня...")
+            self.feedback_label.configure(text=self.app.tr("game.lifeline.saved_phoenix"))
             self.pending_next_question = True
             self._schedule_after(700, self._load_question)
             return
 
-        self.feedback_label.configure(text="Неправильно. Возврат в главное меню...")
+        self.feedback_label.configure(text=self.app.tr("game.wrong_menu"))
         if not self.result_saved:
             self.app.save_game_result("mixed", False)
             self.result_saved = True
         self._schedule_after(900, self.app.open_menu)
+
+    def _request_leave_game(self) -> None:
+        if self.leave_dialog is not None and self.leave_dialog.winfo_exists():
+            self.leave_dialog.lift()
+            self.leave_dialog.focus_force()
+            return
+        self._open_leave_dialog()
+
+    def _open_leave_dialog(self) -> None:
+        dialog = tk.Toplevel(self.root)
+        dialog.configure(bg=BG_PURPLE)
+        dialog.overrideredirect(True)
+        dialog.grab_set()
+        dialog.resizable(False, False)
+        self.leave_dialog = dialog
+
+        shell = tk.Frame(dialog, bg="#38108A", highlightthickness=2, highlightbackground=ACCENT_CYAN, bd=0)
+        shell.pack(padx=18, pady=18)
+
+        header = tk.Frame(shell, bg="#2C0E6B", height=44)
+        header.pack(fill="x")
+        header.pack_propagate(False)
+        tk.Label(
+            header,
+            text=self.app.tr("game.leave.title"),
+            bg="#2C0E6B",
+            fg=TEXT_PRIMARY,
+            font=("Arial", 16, "bold"),
+        ).pack(expand=True)
+
+        body = tk.Frame(shell, bg=CARD_BG, bd=0)
+        body.pack(fill="both", expand=True, padx=16, pady=16)
+
+        tk.Label(
+            body,
+            text=self.app.tr("game.leave.title"),
+            bg=CARD_BG,
+            fg=TEXT_PRIMARY,
+            font=("Arial", 22, "bold"),
+        ).pack(padx=28, pady=(18, 10))
+        tk.Label(
+            body,
+            text=self.app.tr("game.leave.body"),
+            bg=CARD_BG,
+            fg=TEXT_SECONDARY,
+            font=("Arial", 12),
+            wraplength=360,
+            justify="center",
+        ).pack(padx=28, pady=(0, 22))
+
+        buttons = tk.Frame(body, bg=CARD_BG)
+        buttons.pack(padx=10, pady=(0, 8))
+
+        tk.Button(
+            buttons,
+            text=self.app.tr("game.leave.stay"),
+            command=self._close_leave_dialog,
+            relief="flat",
+            bd=0,
+            bg="#171246",
+            fg=TEXT_PRIMARY,
+            activebackground="#20195C",
+            activeforeground=TEXT_PRIMARY,
+            highlightthickness=2,
+            highlightbackground=ACCENT_CYAN,
+            cursor="hand2",
+            font=("Arial", 14, "bold"),
+            width=12,
+            pady=10,
+        ).pack(side="left", padx=8)
+
+        tk.Button(
+            buttons,
+            text=self.app.tr("game.leave.menu"),
+            command=self._confirm_leave_to_menu,
+            relief="flat",
+            bd=0,
+            bg="#171246",
+            fg=ACCENT_CYAN,
+            activebackground="#20195C",
+            activeforeground=ACCENT_CYAN,
+            highlightthickness=2,
+            highlightbackground=ACCENT_CYAN,
+            cursor="hand2",
+            font=("Arial", 14, "bold"),
+            width=12,
+            pady=10,
+        ).pack(side="left", padx=8)
+
+        dialog.bind("<Escape>", lambda _event: self._close_leave_dialog())
+        dialog.update_idletasks()
+        x = self.root.winfo_rootx() + (self.root.winfo_width() - dialog.winfo_width()) // 2
+        y = self.root.winfo_rooty() + (self.root.winfo_height() - dialog.winfo_height()) // 2
+        dialog.geometry(f"+{max(x, 0)}+{max(y, 0)}")
+
+    def _close_leave_dialog(self) -> None:
+        if self.leave_dialog is not None and self.leave_dialog.winfo_exists():
+            self.leave_dialog.grab_release()
+            self.leave_dialog.destroy()
+        self.leave_dialog = None
+
+    def _confirm_leave_to_menu(self) -> None:
+        self._close_leave_dialog()
+        self.app.open_menu()
 
     def _apply_scaled_layout(self) -> None:
         self.menu_btn.configure(font=self._font(17), height=max(42, int(MENU_SPEC[3] * self.scale)), radius=max(22, int(MENU_SPEC[4] * self.scale)))
@@ -597,10 +702,18 @@ class GameScreen(Screen):
         self.on_resize(event.width, event.height)
 
     def on_escape(self) -> None:
-        self.app.open_menu()
+        self._request_leave_game()
 
     def on_destroy(self) -> None:
         self._cancel_pending_jobs()
+        self._close_leave_dialog()
+
+    def on_language_changed(self) -> None:
+        self.menu_btn.configure(text=self.app.tr("common.menu"))
+        self.question_prefix_label.configure(text=self.app.tr("game.question"))
+        if self.current_question is not None:
+            self._set_question_text(self.app.tr("game.question"), self.current_question.text)
+        self._update_header_progress()
 
 
 class GameApp:

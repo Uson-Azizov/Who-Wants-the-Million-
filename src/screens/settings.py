@@ -18,7 +18,7 @@ DESIGN_HEIGHT = 1024
 BACKGROUND_COLOR = "#29007A"
 ACCENT = "#62BDD0"
 BUTTON_FILL = "#070534"
-LIGHT_TRACK = "#D9D9D9"
+LIGHT_TRACK = "#A4ABC4"
 DARK_TRACK = "#4A4A4A"
 TEXT_PRIMARY = "#FFFFFF"
 TEXT_ACCENT = "#2EBECD"
@@ -26,8 +26,14 @@ TOGGLE_OFF = "#7A7A7A"
 
 MENU_BUTTON = (-126, 34, 412, 122, 61)
 LOGO_RECT = (1257, 11, 172, 171)
-SPECIAL_BUTTON = (178, 792, 336, 126, 32)
-EXPORT_BUTTON = (552, 792, 336, 126, 32)
+SPECIAL_BUTTON = (178, 828, 336, 126, 32)
+EXPORT_BUTTON = (552, 828, 336, 126, 32)
+LANGUAGE_LABEL_POS = (197, 686)
+LANGUAGE_BUTTON_SPECS = {
+    "ru": (706, 694, 152, 76, 26),
+    "en": (886, 694, 152, 76, 26),
+    "ky": (1066, 694, 184, 76, 26),
+}
 
 SFX_LABEL_POS = (197, 219)
 MUSIC_LABEL_POS = (197, 404)
@@ -96,6 +102,7 @@ class SettingsScreen(Screen):
         self.special_bounds: tuple[float, float, float, float] | None = None
         self.export_bounds: tuple[float, float, float, float] | None = None
         self.toggle_bounds: tuple[float, float, float, float] | None = None
+        self.language_bounds: dict[str, tuple[float, float, float, float]] = {}
         self.export_window: tk.Toplevel | None = None
         self.export_status_var = tk.StringVar(value="")
 
@@ -256,7 +263,7 @@ class SettingsScreen(Screen):
         self.canvas.create_text(
             (x1 + x2) / 2,
             (y1 + y2) / 2,
-            text="Меню",
+            text=self.app.tr("common.menu"),
             fill=TEXT_PRIMARY,
             font=self._font(50),
             anchor="center",
@@ -272,6 +279,50 @@ class SettingsScreen(Screen):
             font=self._font(96),
             anchor="nw",
         )
+
+    def _draw_language_selector(self) -> None:
+        self.canvas.create_text(
+            self._sx(LANGUAGE_LABEL_POS[0] + MAIN_SECTION_SHIFT_X),
+            self._sy(LANGUAGE_LABEL_POS[1]),
+            text=self.app.tr("settings.language"),
+            fill=TEXT_PRIMARY,
+            font=self._font(84),
+            anchor="nw",
+        )
+        self.language_bounds = {}
+
+        for language, spec in LANGUAGE_BUTTON_SPECS.items():
+            x, y, w, h, radius = spec
+            x1 = self._sx(x + MAIN_SECTION_SHIFT_X)
+            y1 = self._sy(y)
+            x2 = self._sx(x + MAIN_SECTION_SHIFT_X + w)
+            y2 = self._sy(y + h)
+            active = self.app.language == language
+            hover = self.hover_target == f"lang:{language}"
+
+            fill = ACCENT if active else self._blend(BUTTON_FILL, "#10105D", 0.35 if hover else 0.0)
+            border = "#8EDDE8" if active else ACCENT
+            text_color = BUTTON_FILL if active else TEXT_PRIMARY
+
+            self._create_round_rect(
+                x1,
+                y1,
+                x2,
+                y2,
+                radius * self.scale,
+                fill=fill,
+                outline=border,
+                width=max(2, int(3 * self.scale)),
+            )
+            self.canvas.create_text(
+                (x1 + x2) / 2,
+                (y1 + y2) / 2,
+                text=self.app.tr(f"settings.language.{language}"),
+                fill=text_color,
+                font=self._font(30),
+                anchor="center",
+            )
+            self.language_bounds[language] = (x1, y1, x2, y2)
 
     def _slider_value(self, name: str) -> float:
         return float(self.app.sfx_level_var.get() if name == "sfx" else self.app.music_level_var.get())
@@ -390,10 +441,10 @@ class SettingsScreen(Screen):
         self.toggle_bounds = (x1, y1, x2, y2)
 
     def _draw_special_button(self) -> None:
-        self._draw_action_button("Special", SPECIAL_BUTTON, "special")
+        self._draw_action_button(self.app.tr("common.special"), SPECIAL_BUTTON, "special")
 
     def _draw_export_button(self) -> None:
-        self._draw_action_button("Export", EXPORT_BUTTON, "export")
+        self._draw_action_button(self.app.tr("common.export"), EXPORT_BUTTON, "export")
 
     def _draw_action_button(self, label: str, spec: tuple[int, int, int, int, int], target: str) -> None:
         x, y, w, h, radius = spec
@@ -411,7 +462,7 @@ class SettingsScreen(Screen):
             y2,
             radius * self.scale,
             fill=fill,
-            outline="#FFFFFF",
+            outline=ACCENT,
             width=max(2, int(2 * self.scale)),
         )
         self.canvas.create_text(
@@ -419,7 +470,7 @@ class SettingsScreen(Screen):
             (y1 + y2) / 2,
             text=label,
             fill=TEXT_ACCENT,
-            font=self._font(72),
+            font=self._font(66),
             anchor="center",
         )
         if target == "special":
@@ -433,16 +484,18 @@ class SettingsScreen(Screen):
         self.special_bounds = None
         self.export_bounds = None
         self.toggle_bounds = None
+        self.language_bounds = {}
         self.slider_geometries = {}
 
         self._draw_menu_button()
         self._draw_logo()
-        self._draw_label("SFX", *SFX_LABEL_POS)
-        self._draw_label("MUSIC", *MUSIC_LABEL_POS)
-        self._draw_label("VIBRATION", *VIBRATION_LABEL_POS)
+        self._draw_label(self.app.tr("settings.sfx"), *SFX_LABEL_POS)
+        self._draw_label(self.app.tr("settings.music"), *MUSIC_LABEL_POS)
+        self._draw_label(self.app.tr("settings.vibration"), *VIBRATION_LABEL_POS)
         self._draw_slider("sfx", SLIDER_ONE_Y)
         self._draw_slider("music", SLIDER_TWO_Y)
         self._draw_toggle()
+        self._draw_language_selector()
         self._draw_special_button()
         self._draw_export_button()
 
@@ -470,6 +523,11 @@ class SettingsScreen(Screen):
             x1, y1, x2, y2 = self.export_bounds
             if x1 <= x <= x2 and y1 <= y <= y2:
                 return "export"
+
+        for language, bounds in self.language_bounds.items():
+            x1, y1, x2, y2 = bounds
+            if x1 <= x <= x2 and y1 <= y <= y2:
+                return f"lang:{language}"
 
         return None
 
@@ -523,6 +581,11 @@ class SettingsScreen(Screen):
             self._open_export_dialog()
             return
 
+        if target is not None and target.startswith("lang:"):
+            self.app.set_language(target.split(":", 1)[1])
+            self._draw_screen()
+            return
+
         self._set_cursor(target)
         self._draw_screen()
 
@@ -547,7 +610,7 @@ class SettingsScreen(Screen):
 
         self.export_status_var.set("")
         window = tk.Toplevel(self.root)
-        window.title("Export Data")
+        window.title(self.app.tr("settings.export_title"))
         window.configure(bg=BACKGROUND_COLOR)
         window.transient(self.root)
         window.grab_set()
@@ -559,14 +622,14 @@ class SettingsScreen(Screen):
 
         tk.Label(
             frame,
-            text="Export Data",
+            text=self.app.tr("settings.export_title"),
             bg="#34107D",
             fg=TEXT_PRIMARY,
             font=("Arial", 24, "bold"),
         ).pack(pady=(18, 8))
         tk.Label(
             frame,
-            text="Choose a format for exporting questions and game results",
+            text=self.app.tr("settings.export_subtitle"),
             bg="#34107D",
             fg="#D9D6E8",
             font=("Arial", 12),
@@ -575,11 +638,11 @@ class SettingsScreen(Screen):
         buttons = tk.Frame(frame, bg="#34107D")
         buttons.pack(padx=22, pady=(0, 18))
 
-        for format_name in ("JSON", "CSV", "TXT"):
+        for format_name in ("json", "csv", "txt"):
             tk.Button(
                 buttons,
-                text=format_name,
-                command=lambda fmt=format_name.lower(): self._run_export(fmt),
+                text=self.app.tr(f"settings.export.{format_name}"),
+                command=lambda fmt=format_name: self._run_export(fmt),
                 relief="flat",
                 bd=0,
                 bg=BUTTON_FILL,
@@ -604,7 +667,7 @@ class SettingsScreen(Screen):
 
         tk.Button(
             frame,
-            text="Close",
+            text=self.app.tr("common.close"),
             command=self._close_export_dialog,
             relief="flat",
             bd=0,
@@ -644,10 +707,14 @@ class SettingsScreen(Screen):
     def on_escape(self) -> None:
         self.app.open_menu()
 
+    def on_language_changed(self) -> None:
+        self._draw_screen()
+
 
 class SettingsApp:
     width: int
     height: int
+    language: str
     sfx_level_var: tk.DoubleVar
     music_level_var: tk.DoubleVar
     vibration_enabled_var: tk.BooleanVar
@@ -662,4 +729,10 @@ class SettingsApp:
         raise NotImplementedError
 
     def export_game_data(self, format_name: str) -> tuple[bool, str]:
+        raise NotImplementedError
+
+    def tr(self, key: str, **kwargs) -> str:
+        raise NotImplementedError
+
+    def set_language(self, language: str) -> None:
         raise NotImplementedError
